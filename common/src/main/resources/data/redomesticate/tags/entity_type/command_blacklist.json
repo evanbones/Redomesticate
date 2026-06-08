@@ -54,6 +54,30 @@
     {
       "id": "adorablehamsterpets:hamster",
       "required": false
+    },
+    {
+      "id": "cobblemon:pokemon",
+      "required": false
+    },
+    {
+      "id": "primal:bear",
+      "required": false
+    },
+    {
+      "id": "primal:eagle",
+      "required": false
+    },
+    {
+      "id": "primal:lion",
+      "required": false
+    },
+    {
+      "id": "primal:snake",
+      "required": false
+    },
+    {
+      "id": "primal:walrus",
+      "required": false
     }
   ]
 }
