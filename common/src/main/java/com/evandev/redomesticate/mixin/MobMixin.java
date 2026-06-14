@@ -14,6 +14,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -139,7 +140,7 @@ public abstract class MobMixin extends LivingEntity implements ICommandableMob, 
         Mob mob = (Mob) (Object) this;
 
         if (TameableUtils.isTamed(mob) && TameableUtils.isPetOf(player, mob)) {
-            if (ModConfig.get().trinaryCommandSystem && !mob.getType().is(ModTags.COMMAND_BLACKLIST) && itemInHand.isEmpty()) {
+            if (ModConfig.get().trinaryCommandSystem && !mob.getType().is(ModTags.COMMAND_BLACKLIST) && !(mob instanceof AbstractHorse) && itemInHand.isEmpty()) {
                 if (!player.level().isClientSide()) {
                     mob.setTarget(null);
                     mob.getNavigation().stop();

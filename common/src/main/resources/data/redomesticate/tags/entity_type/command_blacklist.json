@@ -1,4 +1,5 @@
 {
+  "#comment": "For the mobs that should not use the trinary command system",
   "values": [
     "minecraft:horse",
     "minecraft:donkey",
@@ -77,6 +78,62 @@
     },
     {
       "id": "primal:walrus",
+      "required": false
+    },
+    {
+      "id": "companions:antlion",
+      "required": false
+    },
+    {
+      "id": "companions:dinamo",
+      "required": false
+    },
+    {
+      "id": "companions:croissant_dragon",
+      "required": false
+    },
+    {
+      "id": "companions:shade_sword",
+      "required": false
+    },
+    {
+      "id": "companions:shade_maw",
+      "required": false
+    },
+    {
+      "id": "companions:cornelius",
+      "required": false
+    },
+    {
+      "id": "companions:minion",
+      "required": false
+    },
+    {
+      "id": "companions:soul_mage",
+      "required": false
+    },
+    {
+      "id": "companions:puppet_glove",
+      "required": false
+    },
+    {
+      "id": "companions:puppet",
+      "required": false
+    },
+    {
+      "id": "companions:teddy",
+      "required": false
+    },
+    {
+      "id": "companions:mankh",
+      "required": false
+    },
+    {
+      "id": "companions:cloak",
+      "required": false
+    },
+    {
+      "id": "environmental:zebra",
       "required": false
     }
   ]

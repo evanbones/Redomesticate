@@ -31,6 +31,7 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Fox;
+import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
@@ -140,7 +141,7 @@ public class InteractionHandler {
         }
 
         if (TameableUtils.isTamed(mob) && TameableUtils.isPetOf(player, mob)) {
-            if (ModConfig.get().trinaryCommandSystem && player.isShiftKeyDown() && !mob.getType().is(ModTags.COMMAND_BLACKLIST)) {
+            if (ModConfig.get().trinaryCommandSystem && player.isShiftKeyDown() && !mob.getType().is(ModTags.COMMAND_BLACKLIST) && !(mob instanceof AbstractHorse)) {
                 if (isClient) return InteractionResult.SUCCESS;
 
                 mob.setTarget(null);
@@ -198,7 +199,7 @@ public class InteractionHandler {
                 return InteractionResult.SUCCESS;
             }
 
-            if (!ModConfig.get().trinaryCommandSystem && !(mob instanceof TamableAnimal) && !mob.getType().is(ModTags.COMMAND_BLACKLIST)) {
+            if (!ModConfig.get().trinaryCommandSystem && !(mob instanceof TamableAnimal) && !mob.getType().is(ModTags.COMMAND_BLACKLIST) && !(mob instanceof AbstractHorse)) {
                 boolean isFood = mob instanceof Animal animal && animal.isFood(itemInHand);
 
                 if (!isFood) {

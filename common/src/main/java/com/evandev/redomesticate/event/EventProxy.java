@@ -431,6 +431,18 @@ public class EventProxy {
                     if (data != null) {
                         data.removeMatchingLanternRequests(mob.getUUID());
                     }
+                    BlockPos bedPos = TameableUtils.getPetBedPos(mob);
+                    if (bedPos != null) {
+                        if (level.getBlockEntity(bedPos) instanceof PetBedBlockEntity petBed) {
+                            if (petBed.getOwnerUUID() == null) {
+                                petBed.setOwnerUUID(mob.getUUID());
+                            } else if (!mob.getUUID().equals(petBed.getOwnerUUID())) {
+                                TameableUtils.removePetBedPos(mob);
+                            }
+                        } else {
+                            TameableUtils.removePetBedPos(mob);
+                        }
+                    }
                 }
             }
         }
@@ -450,6 +462,15 @@ public class EventProxy {
             if (TameableUtils.couldBeTamed(living) && TameableUtils.hasEnchant(living, ModEnchantments.HEALTH_BOOST)) {
                 TameableUtils.setSafePetHealth(living, living.getHealth());
             }
+            if (!living.level().isClientSide && living.isAlive() && TameableUtils.isTamed(living)) {
+                BlockPos bedPos = TameableUtils.getPetBedPos(living);
+                if (bedPos != null) {
+                    if (living.level().getBlockEntity(bedPos) instanceof PetBedBlockEntity petBed) {
+                        petBed.setOwnerUUID(null);
+                    }
+                    TameableUtils.removePetBedPos(living);
+                }
+            }
         }
     }
 
@@ -464,6 +485,9 @@ public class EventProxy {
                 ModWorldData worldData = ModWorldData.get(entity.level());
                 if (worldData != null) {
                     worldData.addRespawnRequest(request);
+                }
+                if (!entity.level().isClientSide && entity.level().getBlockEntity(bedPos) instanceof PetBedBlockEntity petBed) {
+                    petBed.setOwnerUUID(null);
                 }
             }
             if (!(entity instanceof TamableAnimal)) {

@@ -122,6 +122,17 @@ public class PetBedBlock extends BaseEntityBlock {
         return RenderShape.MODEL;
     }
 
+    @Override
+    public void onRemove(BlockState state, @NotNull Level level, @NotNull BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if (!state.is(newState.getBlock()) && !level.isClientSide) {
+            if (level.getBlockEntity(pos) instanceof PetBedBlockEntity petBed) {
+                petBed.removeAllRequestsFor(null);
+                petBed.resetBedsForNearbyPets();
+            }
+        }
+        super.onRemove(state, level, pos, newState, movedByPiston);
+    }
+
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {

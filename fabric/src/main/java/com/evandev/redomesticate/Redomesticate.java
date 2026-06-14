@@ -48,8 +48,9 @@ public class Redomesticate implements ModInitializer {
         DynamicRegistries.registerSynced(TamingDefinition.REGISTRY_KEY, TamingDefinition.CODEC);
         DynamicRegistries.registerSynced(TransformationDefinition.REGISTRY_KEY, TransformationDefinition.CODEC);
 
-        PlayerBlockBreakEvents.AFTER.register((world, player, pos, state, blockEntity) -> {
+        PlayerBlockBreakEvents.BEFORE.register((world, player, pos, state, blockEntity) -> {
             EventProxy.onBlockBreak(world, pos, state, player);
+            return true;
         });
 
         UseEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
