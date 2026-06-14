@@ -20,7 +20,9 @@ public class AxolotlAttackablesSensorMixin {
     private void isHuntTarget(LivingEntity axolotl, LivingEntity livingEntity, CallbackInfoReturnable<Boolean> cir) {
         if (axolotl instanceof ITameableEntity tamed && axolotl instanceof ICommandableMob commandable && tamed.redomesticate$getTameOwner() != null) {
             if (!commandable.redomesticate$isStayingStill()) {
-                if (commandable.redomesticate$isValidAttackTarget(livingEntity)) {
+                if (livingEntity.getUUID().equals(tamed.redomesticate$getTameOwnerUUID())) {
+                    cir.setReturnValue(false);
+                } else if (commandable.redomesticate$isValidAttackTarget(livingEntity)) {
                     cir.setReturnValue(true);
                 } else {
                     cir.setReturnValue(false);
