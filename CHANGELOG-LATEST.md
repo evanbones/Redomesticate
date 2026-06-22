@@ -1,3 +1,3 @@
 ### Fixed
 
-- Fixed tamed Axolotls sometimes attacking owners.
+- Fixed possible ConcurrentModificationException related to pet beds.

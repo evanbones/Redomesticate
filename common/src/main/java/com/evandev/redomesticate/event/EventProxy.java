@@ -130,26 +130,39 @@ public class EventProxy {
             Entity entity = data.entity();
             ServerLevel endpointWorld = data.level();
             UUID ownerUUID = data.ownerUuid();
-            entity.unRide();
-            entity.setLevel(endpointWorld);
+
+            if (!entity.isAlive()) continue;
+
             Entity player = endpointWorld.getPlayerByUUID(ownerUUID);
             if (player != null) {
-                Entity teleportedEntity = entity.getType().create(endpointWorld);
-                if (teleportedEntity != null) {
-                    teleportedEntity.restoreFrom(entity);
-                    Vec3 toPos = player.position();
-                    EntityDimensions dimensions = entity.getDimensions(entity.getPose());
-                    AABB suffocationBox = new AABB(-dimensions.width() / 2.0F, 0, -dimensions.width() / 2.0F, dimensions.width() / 2.0F, dimensions.height(), dimensions.width() / 2.0F);
-                    while (!endpointWorld.noCollision(entity, suffocationBox.move(toPos.x, toPos.y, toPos.z)) && toPos.y < 300) {
-                        toPos = toPos.add(0, 1, 0);
-                    }
-                    teleportedEntity.moveTo(toPos.x, toPos.y, toPos.z, entity.getYRot(), entity.getXRot());
-                    teleportedEntity.setYHeadRot(entity.getYHeadRot());
-                    teleportedEntity.fallDistance = 0.0F;
-                    teleportedEntity.setPortalCooldown();
-                    endpointWorld.addFreshEntity(teleportedEntity);
+                Vec3 toPos = player.position();
+                EntityDimensions dimensions = entity.getDimensions(entity.getPose());
+                AABB suffocationBox = new AABB(-dimensions.width() / 2.0F, 0, -dimensions.width() / 2.0F, dimensions.width() / 2.0F, dimensions.height(), dimensions.width() / 2.0F);
+
+                while (!endpointWorld.noCollision(entity, suffocationBox.move(toPos.x, toPos.y, toPos.z)) && toPos.y < 300) {
+                    toPos = toPos.add(0, 1, 0);
                 }
-                entity.remove(Entity.RemovalReason.DISCARDED);
+
+                if (entity.level().dimension() != endpointWorld.dimension()) {
+                    entity.unRide();
+                    entity.setLevel(endpointWorld);
+                    Entity teleportedEntity = entity.getType().create(endpointWorld);
+                    if (teleportedEntity != null) {
+                        teleportedEntity.restoreFrom(entity);
+                        teleportedEntity.moveTo(toPos.x, toPos.y, toPos.z, entity.getYRot(), entity.getXRot());
+                        teleportedEntity.setYHeadRot(entity.getYHeadRot());
+                        teleportedEntity.fallDistance = 0.0F;
+                        teleportedEntity.setPortalCooldown();
+                        endpointWorld.addFreshEntity(teleportedEntity);
+                    }
+                    entity.remove(Entity.RemovalReason.DISCARDED);
+                } else {
+                    entity.fallDistance = 0.0F;
+                    ChunkPos chunkpos = new ChunkPos(BlockPos.containing(toPos.x, toPos.y, toPos.z));
+                    endpointWorld.getChunkSource().addRegionTicket(TicketType.POST_TELEPORT, chunkpos, 0, entity.getId());
+                    entity.teleportTo(toPos.x, toPos.y, toPos.z);
+                    entity.setPortalCooldown();
+                }
             }
         }
         teleportingPets.clear();
@@ -169,24 +182,10 @@ public class EventProxy {
 
     private static void teleportNearbyPets(Player owner, Vec3 fromPos, Vec3 toPos, Level fromLevel, Level toLevel) {
         double dist = 20;
-        boolean removeAndReadd = fromLevel.dimension() != toLevel.dimension();
         Predicate<Entity> enchantedPet = (animal) -> animal instanceof Mob && TameableUtils.isPetOf(owner, animal) && TameableUtils.isValidTeleporter(owner, (Mob) animal);
+
         for (Mob entity : fromLevel.getEntitiesOfClass(Mob.class, new AABB(fromPos.x - dist, fromPos.y - dist, fromPos.z - dist, fromPos.x + dist, fromPos.y + dist, fromPos.z + dist), EntitySelector.NO_SPECTATORS.and(enchantedPet))) {
-            if (removeAndReadd) {
-                teleportingPets.add(new TeleportData(entity, (ServerLevel) toLevel, owner.getUUID()));
-            } else {
-                EntityDimensions dimensions = entity.getDimensions(entity.getPose());
-                AABB suffocationBox = new AABB(-dimensions.width() / 2.0F, 0, -dimensions.width() / 2.0F, dimensions.width() / 2.0F, dimensions.height(), dimensions.width() / 2.0F);
-                while (!toLevel.noCollision(entity, suffocationBox.move(toPos.x, toPos.y, toPos.z)) && toPos.y < 300) {
-                    toPos = toPos.add(0, 1, 0);
-                }
-                entity.fallDistance = 0.0F;
-                ChunkPos chunkpos = new ChunkPos(BlockPos.containing(toPos.x, toPos.y, toPos.z));
-                ((ServerLevel) entity.level()).getChunkSource().addRegionTicket(TicketType.POST_TELEPORT, chunkpos, 0, entity.getId());
-                entity.level().getChunk(chunkpos.x, chunkpos.z);
-                entity.teleportTo(toPos.x, toPos.y, toPos.z);
-                entity.setPortalCooldown();
-            }
+            teleportingPets.add(new TeleportData(entity, (ServerLevel) toLevel, owner.getUUID()));
         }
     }
 
@@ -461,15 +460,6 @@ public class EventProxy {
             }
             if (TameableUtils.couldBeTamed(living) && TameableUtils.hasEnchant(living, ModEnchantments.HEALTH_BOOST)) {
                 TameableUtils.setSafePetHealth(living, living.getHealth());
-            }
-            if (!living.level().isClientSide && living.isAlive() && TameableUtils.isTamed(living)) {
-                BlockPos bedPos = TameableUtils.getPetBedPos(living);
-                if (bedPos != null) {
-                    if (living.level().getBlockEntity(bedPos) instanceof PetBedBlockEntity petBed) {
-                        petBed.setOwnerUUID(null);
-                    }
-                    TameableUtils.removePetBedPos(living);
-                }
             }
         }
     }
