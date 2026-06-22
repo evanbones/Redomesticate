@@ -27,7 +27,7 @@ public class FollowParentGoalMixin {
     )
     private void canUse(CallbackInfoReturnable<Boolean> cir) {
         if (animal instanceof ICommandableMob commandableMob && commandableMob.redomesticate$getPetCommand() != PetCommand.WANDER && ModConfig.get().trinaryCommandSystem) {
-            if (!this.animal.getType().is(ModTags.COMMAND_BLACKLIST)) {
+            if (this.animal.getType().is(ModTags.COMMAND_WHITELIST)) {
                 cir.setReturnValue(false);
             }
         }
@@ -40,7 +40,7 @@ public class FollowParentGoalMixin {
     )
     private void canContinueToUse(CallbackInfoReturnable<Boolean> cir) {
         if (animal instanceof ICommandableMob commandableMob && commandableMob.redomesticate$getPetCommand() != PetCommand.WANDER && ModConfig.get().trinaryCommandSystem) {
-            if (!this.animal.getType().is(ModTags.COMMAND_BLACKLIST)) {
+            if (this.animal.getType().is(ModTags.COMMAND_WHITELIST)) {
                 cir.setReturnValue(false);
             }
         }

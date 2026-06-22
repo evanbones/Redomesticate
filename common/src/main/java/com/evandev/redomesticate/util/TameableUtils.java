@@ -33,6 +33,7 @@ import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
@@ -221,6 +222,14 @@ public class TameableUtils {
             Services.PLATFORM.sendToAllPlayers(msg, ResourceLocation.parse(Constants.ENTITY_DATA_TAG_UPDATE));
         } else {
             Services.PLATFORM.sendToServer(msg, ResourceLocation.parse(Constants.ENTITY_DATA_TAG_UPDATE));
+        }
+    }
+
+    public static void syncToPlayer(LivingEntity entity, ServerPlayer player) {
+        CompoundTag tag = ModEntityData.getEntityTag(entity);
+        if (tag != null && !tag.isEmpty()) {
+            PropertiesMessage msg = new PropertiesMessage(Constants.ENTITY_DATA_TAG_UPDATE, tag.copy(), entity.getId());
+            Services.PLATFORM.sendToPlayer(player, msg, ResourceLocation.parse(Constants.ENTITY_DATA_TAG_UPDATE));
         }
     }
 

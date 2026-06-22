@@ -411,6 +411,12 @@ public class EventProxy {
         }
     }
 
+    public static void onPlayerStartTracking(ServerPlayer player, Entity target) {
+        if (target instanceof LivingEntity living) {
+            TameableUtils.syncToPlayer(living, player);
+        }
+    }
+
     public static void onEntityJoinWorldEvent(Entity entity, Level level) {
         if (level.isClientSide()) return;
 
@@ -431,7 +437,7 @@ public class EventProxy {
                         data.removeMatchingLanternRequests(mob.getUUID());
                     }
                     BlockPos bedPos = TameableUtils.getPetBedPos(mob);
-                    if (bedPos != null) {
+                    if (bedPos != null && level.hasChunkAt(bedPos)) {
                         if (level.getBlockEntity(bedPos) instanceof PetBedBlockEntity petBed) {
                             if (petBed.getOwnerUUID() == null) {
                                 petBed.setOwnerUUID(mob.getUUID());
@@ -544,6 +550,20 @@ public class EventProxy {
             }
 
             if (!pet.level().isClientSide() && TameableUtils.isTamed(pet)) {
+                if (pet.tickCount % 100 == 0) {
+                    BlockPos bedPos = TameableUtils.getPetBedPos(pet);
+                    if (bedPos != null && pet.level().hasChunkAt(bedPos)) {
+                        if (pet.level().getBlockEntity(bedPos) instanceof PetBedBlockEntity petBed) {
+                            if (petBed.getOwnerUUID() == null) {
+                                petBed.setOwnerUUID(pet.getUUID());
+                            } else if (!pet.getUUID().equals(petBed.getOwnerUUID())) {
+                                TameableUtils.removePetBedPos(pet);
+                            }
+                        } else {
+                            TameableUtils.removePetBedPos(pet);
+                        }
+                    }
+                }
                 if (ModConfig.get().enablePetRoamingRadius) {
                     BlockPos bedPos = TameableUtils.getPetBedPos(pet);
                     boolean shouldRestrict = false;

@@ -141,7 +141,7 @@ public class InteractionHandler {
         }
 
         if (TameableUtils.isTamed(mob) && TameableUtils.isPetOf(player, mob)) {
-            if (ModConfig.get().trinaryCommandSystem && player.isShiftKeyDown() && !mob.getType().is(ModTags.COMMAND_BLACKLIST) && !(mob instanceof AbstractHorse)) {
+            if (ModConfig.get().trinaryCommandSystem && player.isShiftKeyDown() && mob.getType().is(ModTags.COMMAND_WHITELIST) && !(mob instanceof AbstractHorse)) {
                 if (isClient) return InteractionResult.SUCCESS;
 
                 mob.setTarget(null);
@@ -199,7 +199,7 @@ public class InteractionHandler {
                 return InteractionResult.SUCCESS;
             }
 
-            if (!ModConfig.get().trinaryCommandSystem && !(mob instanceof TamableAnimal) && !mob.getType().is(ModTags.COMMAND_BLACKLIST) && !(mob instanceof AbstractHorse)) {
+            if (!ModConfig.get().trinaryCommandSystem && !(mob instanceof TamableAnimal) && mob.getType().is(ModTags.COMMAND_WHITELIST) && !(mob instanceof AbstractHorse)) {
                 boolean isFood = mob instanceof Animal animal && animal.isFood(itemInHand);
 
                 if (!isFood) {

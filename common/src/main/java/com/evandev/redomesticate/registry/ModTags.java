@@ -28,7 +28,7 @@ public class ModTags {
     public static final TagKey<EntityType<?>> REFUSES_PET_BEDS = registerEntity("refuses_pet_beds");
     public static final TagKey<EntityType<?>> INFAMY_TARGET_ATTRACTED = registerEntity("infamy_target_attracted");
     public static final TagKey<EntityType<?>> USES_BRAIN_AI = registerEntity("uses_brain_ai");
-    public static final TagKey<EntityType<?>> COMMAND_BLACKLIST = registerEntity("command_blacklist");
+    public static final TagKey<EntityType<?>> COMMAND_WHITELIST = registerEntity("command_whitelist");
 
     private static TagKey<EntityType<?>> registerEntity(String name) {
         return TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, name));

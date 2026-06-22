@@ -38,7 +38,7 @@ public abstract class FollowOwnerGoalMixin extends Goal {
     )
     private void canUse(CallbackInfoReturnable<Boolean> cir) {
         if (tamable instanceof ICommandableMob commandableMob && !commandableMob.redomesticate$isFollowingOwner() && ModConfig.get().trinaryCommandSystem) {
-            if (!this.tamable.getType().is(ModTags.COMMAND_BLACKLIST)) {
+            if (this.tamable.getType().is(ModTags.COMMAND_WHITELIST)) {
                 cir.setReturnValue(false);
             }
         }
@@ -51,7 +51,7 @@ public abstract class FollowOwnerGoalMixin extends Goal {
     )
     private void canContinueToUse(CallbackInfoReturnable<Boolean> cir) {
         if (tamable instanceof ICommandableMob commandableMob && !commandableMob.redomesticate$isFollowingOwner() && ModConfig.get().trinaryCommandSystem) {
-            if (!this.tamable.getType().is(ModTags.COMMAND_BLACKLIST)) {
+            if (this.tamable.getType().is(ModTags.COMMAND_WHITELIST)) {
                 cir.setReturnValue(false);
             }
         }

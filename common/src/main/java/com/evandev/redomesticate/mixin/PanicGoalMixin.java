@@ -24,7 +24,7 @@ public class PanicGoalMixin {
             cancellable = true
     )
     private void di_canUse(CallbackInfoReturnable<Boolean> cir) {
-        if (!this.mob.getType().is(ModTags.COMMAND_BLACKLIST) && mob instanceof ITameableEntity tameableEntity && tameableEntity.redomesticate$isTame()) {
+        if (this.mob.getType().is(ModTags.COMMAND_WHITELIST) && mob instanceof ITameableEntity tameableEntity && tameableEntity.redomesticate$isTame()) {
             cir.setReturnValue(false);
         }
     }
@@ -35,7 +35,7 @@ public class PanicGoalMixin {
             cancellable = true
     )
     private void di_canContinueToUse(CallbackInfoReturnable<Boolean> cir) {
-        if (!this.mob.getType().is(ModTags.COMMAND_BLACKLIST) && mob instanceof ITameableEntity tameableEntity && tameableEntity.redomesticate$isTame()) {
+        if (this.mob.getType().is(ModTags.COMMAND_WHITELIST) && mob instanceof ITameableEntity tameableEntity && tameableEntity.redomesticate$isTame()) {
             cir.setReturnValue(false);
         }
     }

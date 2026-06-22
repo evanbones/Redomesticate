@@ -23,6 +23,8 @@ import net.neoforged.neoforge.event.AnvilUpdateEvent;
 import net.neoforged.neoforge.event.entity.*;
 import net.neoforged.neoforge.event.entity.item.ItemExpireEvent;
 import net.neoforged.neoforge.event.entity.living.*;
+import net.minecraft.server.level.ServerPlayer;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.level.ExplosionEvent;
@@ -196,5 +198,12 @@ public class Redomesticate {
     @SubscribeEvent
     public void onVillagerTrades(VillagerTradesEvent event) {
         EventProxy.onVillagerTrades(event.getType(), event.getTrades());
+    }
+
+    @SubscribeEvent
+    public void onStartTracking(PlayerEvent.StartTracking event) {
+        if (event.getEntity() instanceof ServerPlayer player) {
+            EventProxy.onPlayerStartTracking(player, event.getTarget());
+        }
     }
 }

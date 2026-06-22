@@ -27,7 +27,7 @@ public abstract class TargetGoalMixin {
 
     @Inject(method = "canAttack", at = @At("HEAD"), cancellable = true)
     private void redomesticate_canAttack(@Nullable LivingEntity potentialTarget, TargetingConditions targetPredicate, CallbackInfoReturnable<Boolean> cir) {
-        if (potentialTarget != null && !this.mob.getType().is(ModTags.COMMAND_BLACKLIST) && TameableUtils.couldBeTamed(this.mob) && !TameableUtils.wantsToAttack(this.mob, potentialTarget)) {
+        if (potentialTarget != null && this.mob.getType().is(ModTags.COMMAND_WHITELIST) && TameableUtils.couldBeTamed(this.mob) && !TameableUtils.wantsToAttack(this.mob, potentialTarget)) {
             cir.setReturnValue(false);
         }
     }
@@ -36,7 +36,7 @@ public abstract class TargetGoalMixin {
     private void redomesticate_canContinueToUse(CallbackInfoReturnable<Boolean> cir) {
         LivingEntity currentTarget = this.mob.getTarget() != null ? this.mob.getTarget() : this.targetMob;
 
-        if (currentTarget != null && !this.mob.getType().is(ModTags.COMMAND_BLACKLIST) && TameableUtils.couldBeTamed(this.mob) && !TameableUtils.wantsToAttack(this.mob, currentTarget)) {
+        if (currentTarget != null && this.mob.getType().is(ModTags.COMMAND_WHITELIST) && TameableUtils.couldBeTamed(this.mob) && !TameableUtils.wantsToAttack(this.mob, currentTarget)) {
             cir.setReturnValue(false);
         }
     }

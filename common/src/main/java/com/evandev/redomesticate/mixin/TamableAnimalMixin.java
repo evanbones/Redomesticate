@@ -18,7 +18,7 @@ public abstract class TamableAnimalMixin {
     private void redomesticate$lockSitStateToCommand(boolean pOrderedToSit, CallbackInfo ci) {
         TamableAnimal tamable = (TamableAnimal) (Object) this;
 
-        if (ModConfig.get().trinaryCommandSystem && tamable.isTame() && this instanceof ICommandableMob commandable && !tamable.getType().is(ModTags.COMMAND_BLACKLIST)) {
+        if (ModConfig.get().trinaryCommandSystem && tamable.isTame() && this instanceof ICommandableMob commandable && tamable.getType().is(ModTags.COMMAND_WHITELIST)) {
             boolean shouldSit = commandable.redomesticate$getPetCommand() == PetCommand.SIT;
 
             if (pOrderedToSit != shouldSit) {

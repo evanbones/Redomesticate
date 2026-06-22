@@ -13,6 +13,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
+import net.fabricmc.fabric.api.networking.v1.EntityTrackingEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -41,6 +42,7 @@ public class Redomesticate implements ModInitializer {
         ServerTickEvents.END_WORLD_TICK.register(EventProxy::onServerTick);
         ServerEntityEvents.ENTITY_LOAD.register(EventProxy::onEntityJoinWorldEvent);
         ServerEntityEvents.ENTITY_UNLOAD.register(EventProxy::onEntityLeaveWorld);
+        EntityTrackingEvents.START_TRACKING.register((entity, player) -> EventProxy.onPlayerStartTracking(player, entity));
         ServerEntityWorldChangeEvents.AFTER_ENTITY_CHANGE_WORLD.register((originalEntity, newEntity, origin, destination) -> {
             EventProxy.onEntityTravelToDimension(newEntity, destination);
         });

@@ -1,0 +1,110 @@
+{
+  "#comment": "For the mobs that should use the trinary command system",
+  "replace": false,
+  "values": [
+    "minecraft:wolf",
+    "minecraft:cat",
+    "minecraft:parrot",
+    "minecraft:fox",
+    "minecraft:axolotl",
+    "minecraft:frog",
+    "minecraft:ocelot",
+    "minecraft:rabbit",
+    {
+      "id": "alexsmobs:capuchin_monkey",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:grizzly_bear",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:roadrunner",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:gorilla",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:elephant",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:crow",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:kangaroo",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:bald_eagle",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:tiger",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:tarantula_hawk",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:snow_leopard",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:mungus",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:warped_toad",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:sugar_glider",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:tasmanian_devil",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:laviathan",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:cosmaw",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:rocky_roller",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:flutter",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:bunfungus",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:terrapin",
+      "required": false
+    },
+    {
+      "id": "crittersandcompanions:otter",
+      "required": false
+    },
+    {
+      "id": "crittersandcompanions:red_panda",
+      "required": false
+    },
+    {
+      "id": "crittersandcompanions:ferret",
+      "required": false
+    }
+  ]
+}

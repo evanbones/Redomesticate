@@ -16,6 +16,7 @@ import net.neoforged.neoforge.client.NeoForgeRenderTypes;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.network.PacketDistributor;
 
+import net.minecraft.server.level.ServerPlayer;
 import java.nio.file.Path;
 
 public class NeoForgePlatformHelper implements IPlatformHelper {
@@ -71,6 +72,13 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
     public void sendToServer(Object message, ResourceLocation id) {
         if (message instanceof CustomPacketPayload payload) {
             PacketDistributor.sendToServer(payload);
+        }
+    }
+
+    @Override
+    public void sendToPlayer(ServerPlayer player, Object message, ResourceLocation id) {
+        if (message instanceof CustomPacketPayload payload) {
+            PacketDistributor.sendToPlayer(player, payload);
         }
     }
 }

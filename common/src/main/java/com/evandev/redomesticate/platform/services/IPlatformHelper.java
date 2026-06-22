@@ -9,6 +9,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
+import net.minecraft.server.level.ServerPlayer;
 import java.nio.file.Path;
 
 public interface IPlatformHelper {
@@ -77,4 +78,6 @@ public interface IPlatformHelper {
     void sendToAllPlayers(Object message, ResourceLocation id);
 
     void sendToServer(Object message, ResourceLocation id);
+
+    void sendToPlayer(ServerPlayer player, Object message, ResourceLocation id);
 }

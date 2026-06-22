@@ -52,35 +52,54 @@ public class PetBedBlockEntity extends BlockEntity {
             }
         }
 
-        if (!level.isClientSide && level.getGameTime() % 40 == 0 && blockEntity.ownerUUID == null) {
-            Predicate<Entity> petPred = (animal) -> {
-                if (!TameableUtils.isTamed(animal)) return false;
-                if (animal.getType().is(ModTags.REFUSES_PET_BEDS)) return false;
-                return switch (animal) {
-                    case ICommandableMob cmd when cmd.redomesticate$isStayingStill() -> false;
-                    case TamableAnimal tamable when tamable.isOrderedToSit() -> false;
-                    case LivingEntity living when TameableUtils.getPetBedPos(living) != null -> false;
-                    default -> true;
-                };
-            };
-            List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, new AABB(pos).inflate(10.0D), EntitySelector.NO_SPECTATORS.and(petPred));
-            if (!list.isEmpty()) {
-                LivingEntity pet = list.getFirst();
-                blockEntity.setOwnerUUID(pet.getUUID());
-                TameableUtils.setPetBedPos(pet, pos);
-                TameableUtils.setPetBedDimension(pet, level.dimension().toString());
-
+        if (!level.isClientSide && level.getGameTime() % 40 == 0) {
+            if (blockEntity.ownerUUID != null) {
+                LivingEntity owner = null;
                 if (level instanceof ServerLevel serverLevel) {
-                    if (pet instanceof Mob mobPet) {
-                        mobPet.getNavigation().moveTo(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, 1.2D);
+                    for (ServerLevel sl : serverLevel.getServer().getAllLevels()) {
+                        Entity entity = sl.getEntity(blockEntity.ownerUUID);
+                        if (entity instanceof LivingEntity living) {
+                            owner = living;
+                            break;
+                        }
                     }
+                }
+                if (owner != null) {
+                    BlockPos ownerBedPos = TameableUtils.getPetBedPos(owner);
+                    if (ownerBedPos == null || !ownerBedPos.equals(pos)) {
+                        blockEntity.setOwnerUUID(null);
+                    }
+                }
+            } else {
+                Predicate<Entity> petPred = (animal) -> {
+                    if (!TameableUtils.isTamed(animal)) return false;
+                    if (animal.getType().is(ModTags.REFUSES_PET_BEDS)) return false;
+                    return switch (animal) {
+                        case ICommandableMob cmd when cmd.redomesticate$isStayingStill() -> false;
+                        case TamableAnimal tamable when tamable.isOrderedToSit() -> false;
+                        case LivingEntity living when TameableUtils.getPetBedPos(living) != null -> false;
+                        default -> true;
+                    };
+                };
+                List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, new AABB(pos).inflate(10.0D), EntitySelector.NO_SPECTATORS.and(petPred));
+                if (!list.isEmpty()) {
+                    LivingEntity pet = list.getFirst();
+                    blockEntity.setOwnerUUID(pet.getUUID());
+                    TameableUtils.setPetBedPos(pet, pos);
+                    TameableUtils.setPetBedDimension(pet, level.dimension().toString());
 
-                    serverLevel.sendParticles(net.minecraft.core.particles.ParticleTypes.HAPPY_VILLAGER,
-                            pet.getX(), pet.getY() + pet.getBbHeight() / 2.0D, pet.getZ(),
-                            5, 0.3, 0.3, 0.3, 0.0);
-                    serverLevel.sendParticles(net.minecraft.core.particles.ParticleTypes.HAPPY_VILLAGER,
-                            pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
-                            5, 0.3, 0.3, 0.3, 0.0);
+                    if (level instanceof ServerLevel serverLevel) {
+                        if (pet instanceof Mob mobPet) {
+                            mobPet.getNavigation().moveTo(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, 1.2D);
+                        }
+
+                        serverLevel.sendParticles(net.minecraft.core.particles.ParticleTypes.HAPPY_VILLAGER,
+                                pet.getX(), pet.getY() + pet.getBbHeight() / 2.0D, pet.getZ(),
+                                5, 0.3, 0.3, 0.3, 0.0);
+                        serverLevel.sendParticles(net.minecraft.core.particles.ParticleTypes.HAPPY_VILLAGER,
+                                pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
+                                5, 0.3, 0.3, 0.3, 0.0);
+                    }
                 }
             }
         }
