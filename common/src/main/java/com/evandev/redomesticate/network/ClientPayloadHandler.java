@@ -15,7 +15,6 @@ public class ClientPayloadHandler {
     }
 
     public static void handleData(final PropertiesMessage data, final IMessageContext context) {
-
         context.enqueueWork(() -> {
                     var compound = data.compound();
                     var entityID = data.entityID();
@@ -29,9 +28,8 @@ public class ClientPayloadHandler {
                     }
                 })
                 .exceptionally(e -> {
-                    context.disconnect(Component.translatable("my_mod.networking.failed", e.getMessage()));
+                    context.disconnect(Component.translatable("text.redomesticate.network_failed", e.getMessage()));
                     return null;
                 });
     }
-
 }

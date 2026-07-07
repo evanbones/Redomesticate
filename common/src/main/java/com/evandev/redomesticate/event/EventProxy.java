@@ -34,6 +34,7 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -484,6 +485,26 @@ public class EventProxy {
                 }
                 if (!entity.level().isClientSide && entity.level().getBlockEntity(bedPos) instanceof PetBedBlockEntity petBed) {
                     petBed.setOwnerUUID(null);
+                }
+            } else {
+                if (!entity.level().isClientSide() && TameableUtils.hasCollar(entity)) {
+                    ItemStack collar = new ItemStack(ModItems.COLLAR_TAG.get());
+                    Map<ResourceLocation, Integer> entityEnchantments = TameableUtils.getEnchants(entity);
+                    if (entityEnchantments != null) {
+                        var reg = entity.level().registryAccess().registry(Registries.ENCHANTMENT);
+                        if (reg.isPresent()) {
+                            for (Map.Entry<ResourceLocation, Integer> entry : entityEnchantments.entrySet()) {
+                                var oneEnchant = reg.get().get(entry.getKey());
+                                if (oneEnchant != null) {
+                                    collar.enchant(reg.get().wrapAsHolder(oneEnchant), entry.getValue());
+                                }
+                            }
+                        }
+                    }
+                    if (entity.hasCustomName()) {
+                        collar.set(DataComponents.CUSTOM_NAME, entity.getCustomName());
+                    }
+                    entity.spawnAtLocation(collar);
                 }
             }
             if (!(entity instanceof TamableAnimal)) {

@@ -15,8 +15,10 @@ public class ModEntityData {
     }
 
     public static void setEntityTag(LivingEntity entity, CompoundTag tag) {
-        if (entity instanceof IPetbedDataEntity) {
-            ((IPetbedDataEntity) entity).redomesticate$setEntityData(tag);
+        if (entity instanceof IPetbedDataEntity petbedData) {
+            petbedData.redomesticate$setEntityData(tag);
+            petbedData.redomesticate$setCachedEnchants(TameableUtils.getEnchants(entity));
+            TameableUtils.onUpdateEnchants(null, entity);
         }
     }
 }

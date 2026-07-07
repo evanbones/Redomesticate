@@ -1,7 +1,10 @@
 package com.evandev.redomesticate.mixin;
 
+import com.evandev.redomesticate.Constants;
 import com.evandev.redomesticate.api.ICommandableMob;
+import com.evandev.redomesticate.api.IPetbedDataEntity;
 import com.evandev.redomesticate.api.ITameableEntity;
+import com.evandev.redomesticate.util.TameableUtils;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.players.OldUsersConverter;
@@ -36,6 +39,12 @@ public abstract class AxolotlMixin extends Animal {
             if (tameable.redomesticate$getTameOwnerUUID() != null) {
                 compoundNBT.putUUID("Owner", tameable.redomesticate$getTameOwnerUUID());
             }
+            if ((Object) this instanceof IPetbedDataEntity petbedData) {
+                CompoundTag syncData = petbedData.redomesticate$getEntityData();
+                if (syncData != null && !syncData.isEmpty()) {
+                    compoundNBT.put(Constants.ENTITY_SYNC_DATA, syncData);
+                }
+            }
         });
     }
 
@@ -61,6 +70,14 @@ public abstract class AxolotlMixin extends Animal {
                 tameable.redomesticate$setTame(true);
             } catch (Throwable throwable) {
                 tameable.redomesticate$setTame(false);
+            }
+        }
+
+        if (compoundNBT.contains(Constants.ENTITY_SYNC_DATA)) {
+            if ((Object) this instanceof IPetbedDataEntity petbedData) {
+                petbedData.redomesticate$setEntityData(compoundNBT.getCompound(Constants.ENTITY_SYNC_DATA));
+                petbedData.redomesticate$setCachedEnchants(TameableUtils.getEnchants(this));
+                TameableUtils.onUpdateEnchants(null, this);
             }
         }
     }
