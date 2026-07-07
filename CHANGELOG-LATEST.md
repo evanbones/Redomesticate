@@ -1,7 +1,7 @@
 ### Changed
 
-- Switched to `command_whitelist` instead of `command_blacklist` for mobs that can use the trinary command system.
+- Pet Beds are now waterloggable.
 
 ### Fixed
 
-- Reworked and improved pet bed syncing/claiming.
+- Properly fixed pets randomly attacking wild versions of themselves.

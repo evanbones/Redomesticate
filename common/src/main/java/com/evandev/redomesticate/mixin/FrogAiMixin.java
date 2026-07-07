@@ -1,10 +1,11 @@
 package com.evandev.redomesticate.mixin;
 
 import com.evandev.redomesticate.api.ICommandableMob;
-import com.evandev.redomesticate.registry.ModActivities;
-import com.evandev.redomesticate.registry.ModTags;
 import com.evandev.redomesticate.content.entity.ai.AmphibianFollowOwnerBehavior;
 import com.evandev.redomesticate.content.entity.ai.AmphibianStayBehavior;
+import com.evandev.redomesticate.registry.ModActivities;
+import com.evandev.redomesticate.registry.ModTags;
+import com.evandev.redomesticate.util.TameableUtils;
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.sounds.SoundEvents;
@@ -53,9 +54,16 @@ public class FrogAiMixin {
                 ci.cancel();
             } else if (commandableMob.redomesticate$isFollowingOwner()) {
                 if (frog.getTarget() != null && frog.getTarget().isAlive()) {
-                    brain.setMemory(MemoryModuleType.ATTACK_TARGET, frog.getTarget());
-                    brain.setMemory(MemoryModuleType.NEAREST_ATTACKABLE, frog.getTarget());
-                    brain.setActiveActivityIfPossible(Activity.TONGUE);
+                    if (TameableUtils.hasSameOwnerAs(frog, frog.getTarget())) {
+                        frog.setTarget(null);
+                        brain.eraseMemory(MemoryModuleType.ATTACK_TARGET);
+                        brain.eraseMemory(MemoryModuleType.NEAREST_ATTACKABLE);
+                        frog.getBrain().setActiveActivityToFirstValid(ImmutableList.of(ModActivities.FROG_FOLLOW.get(), Activity.LAY_SPAWN, Activity.LONG_JUMP, Activity.SWIM, Activity.IDLE));
+                    } else {
+                        brain.setMemory(MemoryModuleType.ATTACK_TARGET, frog.getTarget());
+                        brain.setMemory(MemoryModuleType.NEAREST_ATTACKABLE, frog.getTarget());
+                        brain.setActiveActivityIfPossible(Activity.TONGUE);
+                    }
                 } else {
                     frog.getBrain().setActiveActivityToFirstValid(ImmutableList.of(ModActivities.FROG_FOLLOW.get(), Activity.TONGUE, Activity.LAY_SPAWN, Activity.LONG_JUMP, Activity.SWIM, Activity.IDLE));
                 }

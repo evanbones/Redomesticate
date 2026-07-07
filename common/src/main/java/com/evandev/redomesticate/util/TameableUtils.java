@@ -757,6 +757,10 @@ public class TameableUtils {
             return true;
         }
 
+        if (enemy != null && hasSameOwnerAs(pet, enemy)) {
+            return false;
+        }
+
         if (ModConfig.get().petWontAttackWhenInjured && isInjured(pet)) {
             return enemy != null && !(enemy instanceof Enemy || enemy instanceof IronGolem);
         }

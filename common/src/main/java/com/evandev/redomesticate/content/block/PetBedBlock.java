@@ -1,9 +1,9 @@
 package com.evandev.redomesticate.content.block;
 
+import com.evandev.redomesticate.content.block.entity.PetBedBlockEntity;
 import com.evandev.redomesticate.registry.ModBlockEntities;
 import com.evandev.redomesticate.registry.ModParticles;
 import com.evandev.redomesticate.registry.ModTags;
-import com.evandev.redomesticate.content.block.entity.PetBedBlockEntity;
 import com.evandev.redomesticate.util.TameableUtils;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
@@ -36,8 +36,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
-public class PetBedBlock extends BaseEntityBlock {
-
+public class PetBedBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     private static final VoxelShape COLLIDE_SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 7.0D, 16.0D);
@@ -140,8 +139,8 @@ public class PetBedBlock extends BaseEntityBlock {
     }
 
     @Nullable
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_152180_, @NotNull BlockState p_152181_, @NotNull BlockEntityType<T> p_152182_) {
-        return p_152180_.isClientSide ? null : createTickerHelper(p_152182_, ModBlockEntities.PET_BED.get(), PetBedBlockEntity::tick);
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, @NotNull BlockState blockState, @NotNull BlockEntityType<T> blockEntityType) {
+        return level.isClientSide ? null : createTickerHelper(blockEntityType, ModBlockEntities.PET_BED.get(), PetBedBlockEntity::tick);
     }
 }
 
