@@ -8,6 +8,7 @@ import com.evandev.redomesticate.event.InteractionHandler;
 import com.evandev.redomesticate.platform.NeoForgeRegistrationProvider;
 import com.evandev.redomesticate.registry.NeoForgeModLootModifiers;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -23,7 +24,6 @@ import net.neoforged.neoforge.event.AnvilUpdateEvent;
 import net.neoforged.neoforge.event.entity.*;
 import net.neoforged.neoforge.event.entity.item.ItemExpireEvent;
 import net.neoforged.neoforge.event.entity.living.*;
-import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
@@ -180,7 +180,9 @@ public class Redomesticate {
 
     @SubscribeEvent
     public void onBlockBreak(BlockEvent.BreakEvent event) {
-        EventProxy.onBlockBreak((ServerLevel) event.getLevel(), event.getPos(), event.getState(), event.getPlayer());
+        if (event.getLevel() instanceof ServerLevel serverLevel) {
+            EventProxy.onBlockBreak(serverLevel, event.getPos(), event.getState(), event.getPlayer());
+        }
     }
 
     @SubscribeEvent
