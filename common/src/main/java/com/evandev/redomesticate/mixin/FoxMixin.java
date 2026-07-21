@@ -23,6 +23,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Mixin(Fox.class)
@@ -50,7 +51,7 @@ public abstract class FoxMixin extends Animal {
             ITameableEntity tameable = (ITameableEntity) this;
 
             if (!tameable.redomesticate$isTame()) {
-                List<UUID> trusted = this.getTrustedUUIDs();
+                List<UUID> trusted = this.getTrustedUUIDs().stream().filter(Objects::nonNull).toList();
                 if (!trusted.isEmpty()) {
                     tameable.redomesticate$setTame(true);
                     tameable.redomesticate$setTameOwnerUUID(trusted.getFirst());

@@ -1,3 +1,3 @@
-### Changed
+### Fixed
 
-- Reworked interaction handler to prioritize modded interactions when shift is held.
+- Fixed wild Fox behaviour.
