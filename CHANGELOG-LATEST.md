@@ -1,3 +1,3 @@
-### Fixed
+### Changed
 
-- Fixed crash with Mekanism cardboard boxes.
+- Reworked interaction handler to prioritize modded interactions when shift is held.

@@ -29,7 +29,7 @@ public abstract class CatMixin extends TamableAnimal {
     private void redomesticate$interceptCatSitToggle(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
         Cat cat = (Cat) (Object) this;
 
-        if (ModConfig.get().trinaryCommandSystem && cat.getType().is(ModTags.COMMAND_WHITELIST) && cat.isTame() && cat.isOwnedBy(player) && this instanceof ICommandableMob commandable) {
+        if (ModConfig.get().trinaryCommandSystem && !player.isShiftKeyDown() && cat.getType().is(ModTags.COMMAND_WHITELIST) && cat.isTame() && cat.isOwnedBy(player) && this instanceof ICommandableMob commandable) {
 
             if (!cat.level().isClientSide) {
                 cat.setTarget(null);

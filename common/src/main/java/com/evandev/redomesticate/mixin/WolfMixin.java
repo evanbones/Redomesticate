@@ -41,7 +41,7 @@ public abstract class WolfMixin extends TamableAnimal {
     private void redomesticate$interceptWolfSitToggle(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
         Wolf wolf = (Wolf) (Object) this;
 
-        if (ModConfig.get().trinaryCommandSystem && wolf.isTame() && wolf.isOwnedBy(player) && this instanceof ICommandableMob commandable) {
+        if (ModConfig.get().trinaryCommandSystem && !player.isShiftKeyDown() && wolf.isTame() && wolf.isOwnedBy(player) && this instanceof ICommandableMob commandable) {
             if (!wolf.level().isClientSide) {
                 wolf.setTarget(null);
                 wolf.getNavigation().stop();

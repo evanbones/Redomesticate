@@ -29,7 +29,7 @@ public abstract class ParrotMixin extends TamableAnimal {
     private void redomesticate$interceptParrotSitToggle(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
         Parrot parrot = (Parrot) (Object) this;
 
-        if (ModConfig.get().trinaryCommandSystem && parrot.isTame() && parrot.isOwnedBy(player) && this instanceof ICommandableMob commandable) {
+        if (ModConfig.get().trinaryCommandSystem && !player.isShiftKeyDown() && parrot.isTame() && parrot.isOwnedBy(player) && this instanceof ICommandableMob commandable) {
 
             if (!parrot.level().isClientSide) {
                 parrot.setTarget(null);
