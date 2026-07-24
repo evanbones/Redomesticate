@@ -7,6 +7,7 @@ import com.evandev.redomesticate.registry.ModTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
@@ -24,6 +25,9 @@ public class ModItemTagProvider extends ItemTagsProvider {
     @Override
     protected void addTags(HolderLookup.@NotNull Provider pProvider) {
         this.tag(ModTags.COLLAR_TAG_KEY).add(ModItems.COLLAR_TAG.get());
+
+        this.tag(ItemTags.VANISHING_ENCHANTABLE).add(ModItems.COLLAR_TAG.get());
+        this.tag(ItemTags.EQUIPPABLE_ENCHANTABLE).add(ModItems.COLLAR_TAG.get());
 
         Item[] petBedItems = ModBlocks.PET_BED_BLOCKS.values().stream()
                 .map(blockObj -> blockObj.get().asItem())

@@ -488,23 +488,29 @@ public class EventProxy {
                 }
             } else {
                 if (!entity.level().isClientSide() && TameableUtils.hasCollar(entity)) {
-                    ItemStack collar = new ItemStack(ModItems.COLLAR_TAG.get());
                     Map<ResourceLocation, Integer> entityEnchantments = TameableUtils.getEnchants(entity);
-                    if (entityEnchantments != null) {
-                        var reg = entity.level().registryAccess().registry(Registries.ENCHANTMENT);
-                        if (reg.isPresent()) {
-                            for (Map.Entry<ResourceLocation, Integer> entry : entityEnchantments.entrySet()) {
-                                var oneEnchant = reg.get().get(entry.getKey());
-                                if (oneEnchant != null) {
-                                    collar.enchant(reg.get().wrapAsHolder(oneEnchant), entry.getValue());
+
+                    ResourceLocation vanishingKey = ResourceLocation.withDefaultNamespace("vanishing_curse");
+                    boolean hasVanishing = entityEnchantments != null && entityEnchantments.containsKey(vanishingKey);
+
+                    if (!hasVanishing) {
+                        ItemStack collar = new ItemStack(ModItems.COLLAR_TAG.get());
+                        if (entityEnchantments != null) {
+                            var reg = entity.level().registryAccess().registry(Registries.ENCHANTMENT);
+                            if (reg.isPresent()) {
+                                for (Map.Entry<ResourceLocation, Integer> entry : entityEnchantments.entrySet()) {
+                                    var oneEnchant = reg.get().get(entry.getKey());
+                                    if (oneEnchant != null) {
+                                        collar.enchant(reg.get().wrapAsHolder(oneEnchant), entry.getValue());
+                                    }
                                 }
                             }
                         }
+                        if (entity.hasCustomName()) {
+                            collar.set(DataComponents.CUSTOM_NAME, entity.getCustomName());
+                        }
+                        entity.spawnAtLocation(collar);
                     }
-                    if (entity.hasCustomName()) {
-                        collar.set(DataComponents.CUSTOM_NAME, entity.getCustomName());
-                    }
-                    entity.spawnAtLocation(collar);
                 }
             }
             if (!(entity instanceof TamableAnimal)) {

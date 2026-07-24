@@ -31,7 +31,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Mixin(Mob.class)
-public abstract class MobMixin extends LivingEntity implements ICommandableMob, ITameableEntity, OwnableEntity {
+public abstract class MobMixin extends LivingEntity implements ICommandableMob, ITameableEntity {
 
     @Unique
     private static final EntityDataAccessor<Integer> redomesticate$COMMAND = SynchedEntityData.defineId(Mob.class, EntityDataSerializers.INT);

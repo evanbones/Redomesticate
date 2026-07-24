@@ -3,7 +3,6 @@ package com.evandev.redomesticate.util;
 import com.evandev.redomesticate.config.ModConfig;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
@@ -36,8 +35,9 @@ public class FriendlyFireCommon {
 
     @Nullable
     public static UUID getOwner(Entity entity) {
-        if (entity instanceof OwnableEntity ownable) {
-            return ownable.getOwnerUUID();
+        UUID owner = TameableUtils.getOwnerUUIDOf(entity);
+        if (owner != null) {
+            return owner;
         }
 
         if (entity instanceof AbstractHorse horse) {

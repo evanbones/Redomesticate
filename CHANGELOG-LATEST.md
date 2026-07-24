@@ -1,3 +1,4 @@
 ### Fixed
 
-- Fixed wild Fox behaviour.
+- Fixed crash with EasyNPCs.
+- Collar tags are now enchantable with Curse of Vanishing and Binding.

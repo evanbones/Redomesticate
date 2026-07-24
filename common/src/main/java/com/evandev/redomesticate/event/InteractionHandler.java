@@ -36,7 +36,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
-import net.minecraft.world.phys.Vec3;
 
 import java.util.Map;
 import java.util.Optional;
@@ -169,33 +168,45 @@ public class InteractionHandler {
                 var itemEnchantments = itemInHand.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
                 Map<ResourceLocation, Integer> entityEnchantments = TameableUtils.getEnchants(mob);
 
+                ResourceLocation bindingKey = ResourceLocation.withDefaultNamespace("binding_curse");
+                if (TameableUtils.hasCollar(mob) && entityEnchantments != null && entityEnchantments.containsKey(bindingKey)) {
+                    return InteractionResult.FAIL;
+                }
+
                 if (itemInHand.has(DataComponents.CUSTOM_NAME)) mob.setCustomName(itemInHand.getHoverName());
                 if (!player.isCreative()) itemInHand.shrink(1);
 
                 EventProxy.blockCollarTick(mob);
 
                 if (TameableUtils.hasCollar(mob)) {
-                    ItemStack collarFrom = new ItemStack(ModItems.COLLAR_TAG.get());
-                    if (entityEnchantments != null) {
-                        var reg = mob.level().registryAccess().registry(Registries.ENCHANTMENT);
-                        if (reg.isPresent()) {
-                            for (Map.Entry<ResourceLocation, Integer> entry : entityEnchantments.entrySet()) {
-                                var oneEnchant = reg.get().get(entry.getKey());
-                                if (oneEnchant != null)
-                                    collarFrom.enchant(reg.get().wrapAsHolder(oneEnchant), entry.getValue());
+                    ResourceLocation vanishingKey = ResourceLocation.withDefaultNamespace("vanishing_curse");
+                    boolean hasVanishing = entityEnchantments != null && entityEnchantments.containsKey(vanishingKey);
+
+                    if (!hasVanishing) {
+                        ItemStack collarFrom = new ItemStack(ModItems.COLLAR_TAG.get());
+                        if (entityEnchantments != null) {
+                            var reg = mob.level().registryAccess().registry(Registries.ENCHANTMENT);
+                            if (reg.isPresent()) {
+                                for (Map.Entry<ResourceLocation, Integer> entry : entityEnchantments.entrySet()) {
+                                    var oneEnchant = reg.get().get(entry.getKey());
+                                    if (oneEnchant != null)
+                                        collarFrom.enchant(reg.get().wrapAsHolder(oneEnchant), entry.getValue());
+                                }
                             }
                         }
+                        mob.spawnAtLocation(collarFrom);
                     }
-                    mob.spawnAtLocation(collarFrom);
                 }
 
                 mob.playSound(ModSounds.COLLAR_TAG.get(), 1, 1);
+
                 if (!itemEnchantments.isEmpty()) {
                     TameableUtils.clearEnchants(mob);
                     TameableUtils.addEnchant(mob, itemEnchantments);
                 } else {
                     TameableUtils.clearEnchants(mob);
                 }
+
                 return InteractionResult.SUCCESS;
             }
 
