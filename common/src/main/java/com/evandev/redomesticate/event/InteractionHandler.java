@@ -34,6 +34,8 @@ import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemUtils;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 
@@ -67,7 +69,13 @@ public class InteractionHandler {
             if (tamingDef.isPresent()) {
                 if (isClient) return InteractionResult.SUCCESS;
 
-                if (!player.getAbilities().instabuild) itemInHand.shrink(1);
+                if (!player.getAbilities().instabuild) {
+                    if (itemInHand.is(Items.TROPICAL_FISH_BUCKET)) {
+                        player.setItemInHand(hand, ItemUtils.createFilledResult(itemInHand, player, new ItemStack(Items.WATER_BUCKET)));
+                    } else {
+                        itemInHand.shrink(1);
+                    }
+                }
 
                 if (player.getRandom().nextFloat() < tamingDef.get().chance()) {
                     tameable.redomesticate$setTame(true);

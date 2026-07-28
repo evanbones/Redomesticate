@@ -1,4 +1,3 @@
 ### Fixed
 
-- Fixed crash with EasyNPCs.
-- Collar tags are now enchantable with Curse of Vanishing and Binding.
+- Axolotls no longer eat buckets when being tamed.
