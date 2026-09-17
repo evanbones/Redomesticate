@@ -36,6 +36,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -438,7 +439,8 @@ public class EventProxy {
                         data.removeMatchingLanternRequests(mob.getUUID());
                     }
                     BlockPos bedPos = TameableUtils.getPetBedPos(mob);
-                    if (bedPos != null && level.hasChunkAt(bedPos)) {
+                    String bedDim = TameableUtils.getPetBedDimension(mob);
+                    if (bedPos != null && level.dimension().location().toString().equals(bedDim) && level.hasChunkAt(bedPos)) {
                         if (level.getBlockEntity(bedPos) instanceof PetBedBlockEntity petBed) {
                             if (petBed.getOwnerUUID() == null) {
                                 petBed.setOwnerUUID(mob.getUUID());
@@ -478,13 +480,18 @@ public class EventProxy {
                 CompoundTag data = new CompoundTag();
                 entity.saveWithoutId(data);
                 String saveName = entity.hasCustomName() ? entity.getCustomName().getString() : "";
-                RespawnRequest request = new RespawnRequest(BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString(), TameableUtils.getPetBedDimension(entity), data, bedPos, entity.level().dayTime(), saveName);
+                String bedDim = TameableUtils.getPetBedDimension(entity);
+                RespawnRequest request = new RespawnRequest(BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString(), bedDim, data, bedPos, entity.level().dayTime(), saveName);
                 ModWorldData worldData = ModWorldData.get(entity.level());
                 if (worldData != null) {
                     worldData.addRespawnRequest(request);
                 }
-                if (!entity.level().isClientSide && entity.level().getBlockEntity(bedPos) instanceof PetBedBlockEntity petBed) {
-                    petBed.setOwnerUUID(null);
+                if (!entity.level().isClientSide && entity.getServer() != null) {
+                    ResourceLocation dimLoc = ResourceLocation.tryParse(bedDim);
+                    ServerLevel bedLevel = dimLoc != null ? entity.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, dimLoc)) : null;
+                    if (bedLevel != null && bedLevel.getBlockEntity(bedPos) instanceof PetBedBlockEntity petBed) {
+                        petBed.setOwnerUUID(null);
+                    }
                 }
             } else {
                 if (!entity.level().isClientSide() && TameableUtils.hasCollar(entity)) {
@@ -579,7 +586,8 @@ public class EventProxy {
             if (!pet.level().isClientSide() && TameableUtils.isTamed(pet)) {
                 if (pet.tickCount % 100 == 0) {
                     BlockPos bedPos = TameableUtils.getPetBedPos(pet);
-                    if (bedPos != null && pet.level().hasChunkAt(bedPos)) {
+                    String bedDim = TameableUtils.getPetBedDimension(pet);
+                    if (bedPos != null && pet.level().dimension().location().toString().equals(bedDim) && pet.level().hasChunkAt(bedPos)) {
                         if (pet.level().getBlockEntity(bedPos) instanceof PetBedBlockEntity petBed) {
                             if (petBed.getOwnerUUID() == null) {
                                 petBed.setOwnerUUID(pet.getUUID());

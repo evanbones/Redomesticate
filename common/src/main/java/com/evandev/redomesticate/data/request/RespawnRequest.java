@@ -1,13 +1,13 @@
 package com.evandev.redomesticate.data.request;
 
+import com.evandev.redomesticate.util.TameableUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
-
-import java.util.logging.Level;
+import net.minecraft.world.level.Level;
 
 public class RespawnRequest {
     private final String entityType;
@@ -19,7 +19,7 @@ public class RespawnRequest {
 
     public RespawnRequest(String entityType, String dimension, CompoundTag entityData, BlockPos bedPosition, long timestamp, String nametag) {
         this.entityType = entityType;
-        this.dimension = dimension;
+        this.dimension = TameableUtils.normalizeDimension(dimension);
         this.entityData = entityData;
         this.bedPosition = bedPosition;
         this.timestamp = timestamp;
@@ -51,7 +51,7 @@ public class RespawnRequest {
     }
 
     public static String processDimension(ResourceKey<Level> key) {
-        return key.toString();
+        return key.location().toString();
     }
 
     public String getNametag() {

@@ -172,14 +172,26 @@ public class TameableUtils {
         sync(enchanted, tag);
     }
 
+    public static String normalizeDimension(String dim) {
+        if (dim == null || dim.isEmpty()) {
+            return "minecraft:overworld";
+        }
+        if (dim.contains("/")) {
+            int slashIndex = dim.indexOf('/');
+            int endIndex = dim.endsWith("]") ? dim.length() - 1 : dim.length();
+            return dim.substring(slashIndex + 1, endIndex).trim();
+        }
+        return dim;
+    }
+
     public static String getPetBedDimension(LivingEntity enchanted) {
         CompoundTag tag = ModEntityData.getOrCreateEntityTag(enchanted);
-        return !tag.contains(PET_BED_DIMENSION) ? "minecraft:overworld" : tag.getString(PET_BED_DIMENSION);
+        return !tag.contains(PET_BED_DIMENSION) ? "minecraft:overworld" : normalizeDimension(tag.getString(PET_BED_DIMENSION));
     }
 
     public static void setPetBedDimension(LivingEntity enchanted, String dimension) {
         CompoundTag tag = ModEntityData.getOrCreateEntityTag(enchanted);
-        tag.putString(PET_BED_DIMENSION, dimension);
+        tag.putString(PET_BED_DIMENSION, normalizeDimension(dimension));
         sync(enchanted, tag);
     }
 

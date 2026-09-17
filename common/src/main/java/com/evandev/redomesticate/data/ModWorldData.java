@@ -2,6 +2,7 @@ package com.evandev.redomesticate.data;
 
 import com.evandev.redomesticate.data.request.LanternRequest;
 import com.evandev.redomesticate.data.request.RespawnRequest;
+import com.evandev.redomesticate.util.TameableUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -112,9 +113,10 @@ public class ModWorldData extends SavedData {
 
     public List<RespawnRequest> getRespawnRequestsFor(Level level, BlockPos pos) {
         List<RespawnRequest> list = new ArrayList<>();
-        String dimension = level.dimension().toString();
+        String dimension = level.dimension().location().toString();
         for (RespawnRequest request : this.respawnRequestList) {
-            if (dimension.equals(request.getDimension()) && pos.equals(request.getBedPosition())) {
+            String reqDim = TameableUtils.normalizeDimension(request.getDimension());
+            if (dimension.equals(reqDim) && pos.equals(request.getBedPosition())) {
                 list.add(request);
             }
         }

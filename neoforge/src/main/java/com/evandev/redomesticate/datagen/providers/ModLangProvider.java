@@ -58,6 +58,9 @@ public class ModLangProvider extends LanguageProvider {
         add("message.redomesticate.enchantments", "Enchantments:");
         add("message.redomesticate.set_owner", "%s is now the owner of %s");
         add("message.redomesticate.wayward_lantern_return", "%s has found its way to a nearby Wayward Lantern");
+        add("message.redomesticate.bed_owned", "This bed belongs to %s");
+        add("message.redomesticate.bed_claimed", "This bed is claimed");
+        add("message.redomesticate.bed_vacant", "This bed is unoccupied");
 
         // Entities
         add("entity.minecraft.villager.redomesticate.animal_tamer", "Animal Tamer");

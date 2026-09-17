@@ -8,15 +8,19 @@ import com.evandev.redomesticate.util.TameableUtils;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -35,6 +39,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
+import java.util.UUID;
 
 public class PetBedBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
@@ -56,7 +61,7 @@ public class PetBedBlock extends BaseEntityBlock implements SimpleWaterloggedBlo
                     if (petBed.getOwnerUUID() == null || entity.getUUID().equals(petBed.getOwnerUUID())) {
                         petBed.setOwnerUUID(entity.getUUID());
                         TameableUtils.setPetBedPos((LivingEntity) entity, pos);
-                        TameableUtils.setPetBedDimension((LivingEntity) entity, level.dimension().toString());
+                        TameableUtils.setPetBedDimension((LivingEntity) entity, level.dimension().location().toString());
                         Vec3 look = new Vec3(0, 0, -entity.getBbWidth()).yRot((float) Math.toRadians(180f - entity.getYHeadRot()));
                         Vec3 vec3 = entity.getEyePosition().add(look);
                         Vec3 vec32 = look.scale(0.5F);
@@ -72,6 +77,33 @@ public class PetBedBlock extends BaseEntityBlock implements SimpleWaterloggedBlo
             }
         }
         super.entityInside(state, level, pos, entity);
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if (!level.isClientSide) {
+            BlockEntity be = level.getBlockEntity(pos);
+            if (be instanceof PetBedBlockEntity petBed) {
+                UUID ownerUUID = petBed.getOwnerUUID();
+                if (ownerUUID != null) {
+                    Entity entity = null;
+                    if (level instanceof ServerLevel serverLevel) {
+                        for (ServerLevel sl : serverLevel.getServer().getAllLevels()) {
+                            entity = sl.getEntity(ownerUUID);
+                            if (entity != null) break;
+                        }
+                    }
+                    if (entity != null) {
+                        player.displayClientMessage(Component.translatable("message.redomesticate.bed_owned", entity.getName()), false);
+                    } else {
+                        player.displayClientMessage(Component.translatable("message.redomesticate.bed_claimed"), false);
+                    }
+                } else {
+                    player.displayClientMessage(Component.translatable("message.redomesticate.bed_vacant"), false);
+                }
+            }
+        }
+        return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
     public BlockState getStateForPlacement(BlockPlaceContext context) {

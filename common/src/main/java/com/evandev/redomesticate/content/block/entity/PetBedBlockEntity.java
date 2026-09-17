@@ -11,6 +11,7 @@ import com.evandev.redomesticate.util.TameableUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -39,14 +40,23 @@ public class PetBedBlockEntity extends BlockEntity {
 
     public static void tick(Level level, BlockPos pos, BlockState state, PetBedBlockEntity blockEntity) {
         if (!ModConfig.get().petBedRespawns) return;
-        long time = level.dayTime() % 24000L;
-        if (time == 1) {
+        if (!level.isClientSide && level.getGameTime() % 20 == 0) {
             ModWorldData data = ModWorldData.get(level);
             if (data != null) {
                 List<RespawnRequest> requestList = data.getRespawnRequestsFor(level, pos);
-                for (RespawnRequest request : requestList) {
-                    if (addAndRemoveEntity(level, pos, state.getValue(PetBedBlock.FACING), request)) {
-                        data.removeRespawnRequest(request);
+                if (!requestList.isEmpty()) {
+                    long currentDayTime = level.dayTime();
+                    boolean isDay = level.isDay();
+                    for (RespawnRequest request : requestList) {
+                        long reqTime = request.getTimestamp();
+                        boolean ready = (isDay && currentDayTime / 24000L > reqTime / 24000L)
+                                || Math.abs(currentDayTime - reqTime) >= 24000L
+                                || currentDayTime < reqTime;
+                        if (ready) {
+                            if (addAndRemoveEntity(level, pos, state.getValue(PetBedBlock.FACING), request)) {
+                                data.removeRespawnRequest(request);
+                            }
+                        }
                     }
                 }
             }
@@ -74,10 +84,14 @@ public class PetBedBlockEntity extends BlockEntity {
                 Predicate<Entity> petPred = (animal) -> {
                     if (!TameableUtils.isTamed(animal)) return false;
                     if (animal.getType().is(ModTags.REFUSES_PET_BEDS)) return false;
+                    if (animal instanceof LivingEntity living && TameableUtils.getPetBedPos(living) != null) return false;
+                    boolean closeToBed = animal.distanceToSqr(Vec3.atCenterOf(pos)) <= 2.25D;
+                    if (closeToBed) {
+                        return true;
+                    }
                     return switch (animal) {
                         case ICommandableMob cmd when cmd.redomesticate$isStayingStill() -> false;
                         case TamableAnimal tamable when tamable.isOrderedToSit() -> false;
-                        case LivingEntity living when TameableUtils.getPetBedPos(living) != null -> false;
                         default -> true;
                     };
                 };
@@ -86,17 +100,19 @@ public class PetBedBlockEntity extends BlockEntity {
                     LivingEntity pet = list.getFirst();
                     blockEntity.setOwnerUUID(pet.getUUID());
                     TameableUtils.setPetBedPos(pet, pos);
-                    TameableUtils.setPetBedDimension(pet, level.dimension().toString());
+                    TameableUtils.setPetBedDimension(pet, level.dimension().location().toString());
 
                     if (level instanceof ServerLevel serverLevel) {
-                        if (pet instanceof Mob mobPet) {
+                        if (pet instanceof Mob mobPet && !petPred.test(pet)) {
+                            mobPet.getNavigation().moveTo(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, 1.2D);
+                        } else if (pet instanceof Mob mobPet) {
                             mobPet.getNavigation().moveTo(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, 1.2D);
                         }
 
-                        serverLevel.sendParticles(net.minecraft.core.particles.ParticleTypes.HAPPY_VILLAGER,
+                        serverLevel.sendParticles(ParticleTypes.HAPPY_VILLAGER,
                                 pet.getX(), pet.getY() + pet.getBbHeight() / 2.0D, pet.getZ(),
                                 5, 0.3, 0.3, 0.3, 0.0);
-                        serverLevel.sendParticles(net.minecraft.core.particles.ParticleTypes.HAPPY_VILLAGER,
+                        serverLevel.sendParticles(ParticleTypes.HAPPY_VILLAGER,
                                 pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
                                 5, 0.3, 0.3, 0.3, 0.0);
                     }
@@ -113,8 +129,8 @@ public class PetBedBlockEntity extends BlockEntity {
                 living.load(request.getEntityData());
                 living.setPos(Vec3.upFromBottomCenterOf(pos, 0.8F));
                 living.setHealth(living.getMaxHealth());
-                if (!request.getNametag().isEmpty()) {
-                    living.setCustomName(Component.translatable(request.getNametag()));
+                if (living.getCustomName() == null && !request.getNametag().isEmpty()) {
+                    living.setCustomName(Component.literal(request.getNametag()));
                 }
                 switch (dir) {
                     case NORTH:
