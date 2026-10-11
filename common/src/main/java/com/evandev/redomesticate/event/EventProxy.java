@@ -110,6 +110,12 @@ public class EventProxy {
         VillageHouseManager.addAllHouses(registryAccess);
     }
 
+    public static void serverStopped(MinecraftServer server) {
+        if (currentServer == server) currentServer = null;
+        COLLAR_TICK_TRACKER_MAP.clear();
+        teleportingPets.clear();
+    }
+
     public static boolean onTameHurt(LivingEntity livingEntity, DamageSource source) {
         if (!TameableUtils.isTamed(livingEntity)) {
             return false;

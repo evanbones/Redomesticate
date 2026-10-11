@@ -29,6 +29,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.level.ExplosionEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import net.neoforged.neoforge.event.village.VillagerTradesEvent;
@@ -76,6 +77,11 @@ public class Redomesticate {
     @SubscribeEvent
     public void onServerStart(ServerStartingEvent event) {
         EventProxy.serverStart(event.getServer());
+    }
+
+    @SubscribeEvent
+    public void onServerStopped(ServerStoppedEvent event) {
+        EventProxy.serverStopped(event.getServer());
     }
 
     @SubscribeEvent

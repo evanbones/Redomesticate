@@ -39,6 +39,7 @@ public class Redomesticate implements ModInitializer {
         FabricModLoot.init();
 
         ServerLifecycleEvents.SERVER_STARTING.register(EventProxy::serverStart);
+        ServerLifecycleEvents.SERVER_STOPPED.register(EventProxy::serverStopped);
         ServerTickEvents.END_WORLD_TICK.register(EventProxy::onServerTick);
         ServerEntityEvents.ENTITY_LOAD.register(EventProxy::onEntityJoinWorldEvent);
         ServerEntityEvents.ENTITY_UNLOAD.register(EventProxy::onEntityLeaveWorld);
