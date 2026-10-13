@@ -1,3 +1,3 @@
 ### Fixed
 
-- Fixed memory leak.
+- Performance improvements.

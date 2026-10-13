@@ -15,10 +15,10 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.HashMap;
 import java.util.Map;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 
 @Mixin({LivingEntity.class})
 public abstract class LivingEntityMixin extends Entity implements IPetbedDataEntity {
@@ -42,15 +42,9 @@ public abstract class LivingEntityMixin extends Entity implements IPetbedDataEnt
         this.redomesticate$cachedEnchants = enchants;
     }
 
-    @Inject(
-            method = "getWaterSlowDown()F",
-            at = @At(value = "TAIL"),
-            cancellable = true
-    )
-    private void getWaterSlowdown(CallbackInfoReturnable<Float> cir) {
-        if (TameableUtils.isTamed(this) && redomesticate$isLandAndSea()) {
-            cir.setReturnValue(0.98F);
-        }
+    @ModifyReturnValue(method = "getWaterSlowDown()F", at = @At("RETURN"))
+    private float getWaterSlowdown(float original) {
+        return TameableUtils.isTamed(this) && redomesticate$isLandAndSea() ? 0.98F : original;
     }
 
     @Inject(

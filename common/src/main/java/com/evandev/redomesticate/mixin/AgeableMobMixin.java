@@ -9,8 +9,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 
 @Mixin(AgeableMob.class)
 public class AgeableMobMixin extends PathfinderMob {
@@ -19,14 +18,8 @@ public class AgeableMobMixin extends PathfinderMob {
         super(type, level);
     }
 
-    @Inject(
-            at = @At("HEAD"),
-            method = "isBaby()Z",
-            cancellable = true
-    )
-    private void isBaby(CallbackInfoReturnable<Boolean> cir) {
-        if (TameableUtils.isTamed(this) && TameableUtils.hasEnchant(this, ModEnchantments.IMMATURITY_CURSE)) {
-            cir.setReturnValue(true);
-        }
+    @ModifyReturnValue(method = "isBaby()Z", at = @At("RETURN"))
+    private boolean isBaby(boolean original) {
+        return original || TameableUtils.isTamed(this) && TameableUtils.hasEnchant(this, ModEnchantments.IMMATURITY_CURSE);
     }
 }

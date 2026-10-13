@@ -329,14 +329,12 @@ public class TameableUtils {
     }
 
     public static int getEnchantLevel(LivingEntity entity, ResourceKey<Enchantment> enchantment) {
-        if (!ModConfig.get().isEnchantmentEnabled(enchantment)) return 0;
-        if (entity instanceof IPetbedDataEntity dataEntity) {
-            Map<ResourceLocation, Integer> cache = dataEntity.redomesticate$getCachedEnchants();
-            if (cache != null && cache.containsKey(enchantment.location())) {
-                return cache.get(enchantment.location());
-            }
-        }
-        return 0;
+        if (!(entity instanceof IPetbedDataEntity dataEntity)) return 0;
+        Map<ResourceLocation, Integer> cache = dataEntity.redomesticate$getCachedEnchants();
+        if (cache == null || cache.isEmpty()) return 0;
+        Integer level = cache.get(enchantment.location());
+        if (level == null || !ModConfig.get().isEnchantmentEnabled(enchantment)) return 0;
+        return level;
     }
 
     @Nullable

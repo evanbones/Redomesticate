@@ -12,66 +12,49 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 
 @Mixin(Entity.class)
 public class EntityMixin {
 
-    @Inject(method = "fireImmune()Z", at = @At("HEAD"), cancellable = true)
-    private void isFireImmune(CallbackInfoReturnable<Boolean> cir) {
-        if ((Object) this instanceof LivingEntity livingThis) {
-            if (TameableUtils.isTamed(livingThis) && TameableUtils.hasEnchant(livingThis, ModEnchantments.FIREPROOF)) {
-                cir.setReturnValue(true);
-            }
-        }
+    @ModifyReturnValue(method = "fireImmune()Z", at = @At("RETURN"))
+    private boolean isFireImmune(boolean original) {
+        if (original || !((Object) this instanceof LivingEntity livingThis)) return original;
+        return TameableUtils.isTamed(livingThis) && TameableUtils.hasEnchant(livingThis, ModEnchantments.FIREPROOF);
     }
 
-    @Inject(method = "isPushedByFluid()Z", at = @At("HEAD"), cancellable = true)
-    protected void pushedByWater(CallbackInfoReturnable<Boolean> cir) {
-        if ((Object) this instanceof LivingEntity livingThis) {
-            if (TameableUtils.isTamed(livingThis) && TameableUtils.hasEnchant(livingThis, ModEnchantments.AMPHIBIOUS)) {
-                cir.setReturnValue(false);
-            }
-        }
+    @ModifyReturnValue(method = "isPushedByFluid()Z", at = @At("RETURN"))
+    protected boolean pushedByWater(boolean original) {
+        if (!original || !((Object) this instanceof LivingEntity livingThis)) return original;
+        return !(TameableUtils.isTamed(livingThis) && TameableUtils.hasEnchant(livingThis, ModEnchantments.AMPHIBIOUS));
     }
 
-    @Inject(method = "isAlliedTo(Lnet/minecraft/world/entity/Entity;)Z", at = @At("HEAD"), cancellable = true)
-    private void redomesticate$universalAlliances(Entity other, CallbackInfoReturnable<Boolean> cir) {
-        if ((Object) this instanceof ITameableEntity tameable && tameable.redomesticate$isTame()) {
-            if (other == tameable.redomesticate$getTameOwner()) {
-                cir.setReturnValue(true);
-            }
-            else if ((Object) this instanceof LivingEntity livingThis && other instanceof LivingEntity livingOther) {
-                if (TameableUtils.hasSameOwnerAs(livingThis, livingOther)) {
-                    cir.setReturnValue(true);
-                }
-            }
-        }
+    @ModifyReturnValue(method = "isAlliedTo(Lnet/minecraft/world/entity/Entity;)Z", at = @At("RETURN"))
+    private boolean redomesticate$universalAlliances(boolean original, Entity other) {
+        if (original || !((Object) this instanceof ITameableEntity tameable) || !tameable.redomesticate$isTame()) return original;
+        if (other == tameable.redomesticate$getTameOwner()) return true;
+        return (Object) this instanceof LivingEntity livingThis && other instanceof LivingEntity livingOther
+                && TameableUtils.hasSameOwnerAs(livingThis, livingOther);
     }
 
-    @Inject(method = "canCollideWith(Lnet/minecraft/world/entity/Entity;)Z", at = @At("HEAD"), cancellable = true)
-    protected void canCollideWith(Entity other, CallbackInfoReturnable<Boolean> cir) {
-        if (other instanceof PsychicWallEntity wall && wall.isSameTeam((Entity) (Object) this)) {
-            cir.setReturnValue(false);
-        }
+    @ModifyReturnValue(method = "canCollideWith(Lnet/minecraft/world/entity/Entity;)Z", at = @At("RETURN"))
+    protected boolean canCollideWith(boolean original, Entity other) {
+        return original && !(other instanceof PsychicWallEntity wall && wall.isSameTeam((Entity) (Object) this));
     }
 
-    @Inject(method = "dismountsUnderwater()Z", at = @At("HEAD"), cancellable = true)
-    protected void rideableInWater(CallbackInfoReturnable<Boolean> cir) {
-        if ((Object) this instanceof LivingEntity livingThis) {
-            if (TameableUtils.isTamed(livingThis) && TameableUtils.hasEnchant(livingThis, ModEnchantments.AMPHIBIOUS)) {
-                cir.setReturnValue(true);
-            }
-        }
+    @ModifyReturnValue(method = "dismountsUnderwater()Z", at = @At("RETURN"))
+    protected boolean rideableInWater(boolean original) {
+        if (original || !((Object) this instanceof LivingEntity livingThis)) return original;
+        return TameableUtils.isTamed(livingThis) && TameableUtils.hasEnchant(livingThis, ModEnchantments.AMPHIBIOUS);
     }
 
-    @Inject(method = "getMovementEmission()Lnet/minecraft/world/entity/Entity$MovementEmission;", at = @At("HEAD"), cancellable = true)
-    protected void getMovementEmission(CallbackInfoReturnable<Entity.MovementEmission> cir) {
-        if ((Object) this instanceof LivingEntity livingThis) {
-            if (TameableUtils.isTamed(livingThis) && TameableUtils.hasEnchant(livingThis, ModEnchantments.MUFFLED)) {
-                cir.setReturnValue(Entity.MovementEmission.NONE);
-            }
+    @ModifyReturnValue(method = "getMovementEmission()Lnet/minecraft/world/entity/Entity$MovementEmission;", at = @At("RETURN"))
+    protected Entity.MovementEmission getMovementEmission(Entity.MovementEmission original) {
+        if ((Object) this instanceof LivingEntity livingThis
+                && TameableUtils.isTamed(livingThis) && TameableUtils.hasEnchant(livingThis, ModEnchantments.MUFFLED)) {
+            return Entity.MovementEmission.NONE;
         }
+        return original;
     }
 
     @Inject(method = "gameEvent(Lnet/minecraft/core/Holder;Lnet/minecraft/world/entity/Entity;)V", at = @At("HEAD"), cancellable = true)
