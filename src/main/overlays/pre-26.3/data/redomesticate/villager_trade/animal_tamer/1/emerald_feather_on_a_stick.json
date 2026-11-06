@@ -1,0 +1,12 @@
+{
+  "wants": {
+    "id": "minecraft:emerald",
+    "count": 3.0
+  },
+  "gives": {
+    "id": "redomesticate:feather_on_a_stick"
+  },
+  "max_uses": 2.0,
+  "xp": 3.0,
+  "reputation_discount": 0.05
+}

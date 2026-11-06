@@ -1,0 +1,6 @@
+{
+  "target_entity": "minecraft:horse",
+  "trigger_item": "redomesticate:rotten_apple",
+  "result_entity": "minecraft:zombie_horse",
+  "sound": "minecraft:entity.zombie.infect"
+}

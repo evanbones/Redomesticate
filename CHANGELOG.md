@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2026-11-05
+
+### Added
+
+- Support for Minecraft 26.1, 26.2, and 26.3 (Fabric and NeoForge).
+
+### Fixed
+
+- Fixed Deflecting and Intimidation effects not showing on dedicated servers.
+- Fixed missing name for the Animal Tamer villager profession.
+- Backend cleanups.
+
 ## [1.11.2] - 2026-10-12
 
 ### Fixed

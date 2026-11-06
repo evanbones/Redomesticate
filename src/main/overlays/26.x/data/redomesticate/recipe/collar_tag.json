@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": "#c:ingots/copper",
+    "I": "minecraft:iron_chain"
+  },
+  "pattern": [
+    "I",
+    "C"
+  ],
+  "result": {
+    "count": 1,
+    "id": "redomesticate:collar_tag"
+  }
+}

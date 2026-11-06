@@ -1,0 +1,13 @@
+{
+  "wants": {
+    "id": "minecraft:hay_block",
+    "count": 7.0
+  },
+  "gives": {
+    "id": "minecraft:emerald",
+    "count": 1
+  },
+  "max_uses": 9.0,
+  "xp": 1.0,
+  "reputation_discount": 0.05
+}

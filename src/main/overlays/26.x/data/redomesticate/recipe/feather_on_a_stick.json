@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": "#c:feathers",
+    "I": "minecraft:fishing_rod"
+  },
+  "pattern": [
+    "I ",
+    " C"
+  ],
+  "result": {
+    "count": 1,
+    "id": "redomesticate:feather_on_a_stick"
+  }
+}

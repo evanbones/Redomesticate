@@ -1,0 +1,12 @@
+{
+  "wants": {
+    "id": "minecraft:emerald",
+    "count": 3.0
+  },
+  "gives": {
+    "id": "redomesticate:deed_of_ownership"
+  },
+  "max_uses": 2.0,
+  "xp": 7.0,
+  "reputation_discount": 0.05
+}

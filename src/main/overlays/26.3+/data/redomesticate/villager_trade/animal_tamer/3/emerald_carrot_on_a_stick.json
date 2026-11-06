@@ -1,0 +1,12 @@
+{
+  "wants": {
+    "id": "minecraft:emerald",
+    "count": 3
+  },
+  "gives": {
+    "id": "minecraft:carrot_on_a_stick"
+  },
+  "max_uses": 2,
+  "xp": 10,
+  "reputation_discount": 0.05
+}

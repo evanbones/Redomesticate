@@ -1,0 +1,49 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.evandev.redomesticate.mixin",
+  "compatibilityLevel": "JAVA_${java_version}",
+  "mixins": [
+    "AbstractHorseMixin",
+    "AgeableMobMixin",
+    "AxolotlAiMixin",
+    "AxolotlAttackablesSensorMixin",
+    "AxolotlMixin",
+    "CatMixin",
+    "EntityMixin",
+    "EntityOutlineMixin",
+    "FishingHookMixin",
+    "FloatGoalMixin",
+    "FollowOwnerGoalMixin",
+    "FollowParentGoalMixin",
+    "FoxMixin",
+    "FrogAiMixin",
+    "FrogAttackablesSensorMixin",
+    "FrogMixin",
+    "LivingEntityMixin",
+    "MobMixin",
+    "PanicGoalMixin",
+    "ParrotMixin",
+    "PlayerMixin",
+    "RabbitMixin",
+    "RavagerMixin",
+    "SculkSensorBlockMixin",
+    "ShootTongueMixin",
+    "TamableAnimalMixin",
+    "TargetGoalMixin",
+    "VillagerMixin",
+    "WolfMixin",
+    "accessor.ExperienceOrbAccessor",
+    "accessor.MobAccessor",
+    "accessor.PoiTypesAccessor"
+  ],
+  "client": [
+    "OcelotModelMixin",
+    "accessor.SpriteContentsAccessor"
+  ],
+  "server": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
+

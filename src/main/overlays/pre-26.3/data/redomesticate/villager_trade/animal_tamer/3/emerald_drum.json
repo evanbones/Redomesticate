@@ -1,0 +1,13 @@
+{
+  "wants": {
+    "id": "minecraft:emerald",
+    "count": 2.0
+  },
+  "gives": {
+    "id": "redomesticate:drum",
+    "count": 3
+  },
+  "max_uses": 7.0,
+  "xp": 11.0,
+  "reputation_discount": 0.05
+}

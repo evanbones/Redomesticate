@@ -1,0 +1,13 @@
+{
+  "wants": {
+    "id": "minecraft:emerald",
+    "count": 3.0
+  },
+  "gives": {
+    "id": "minecraft:lead",
+    "count": 2
+  },
+  "max_uses": 5.0,
+  "xp": 10.0,
+  "reputation_discount": 0.05
+}

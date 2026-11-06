@@ -1,0 +1,5 @@
+{
+  "entities": "minecraft:ocelot",
+  "items": "#minecraft:cat_food",
+  "chance": 0.33
+}

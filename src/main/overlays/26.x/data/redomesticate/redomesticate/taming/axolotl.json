@@ -1,0 +1,5 @@
+{
+  "entities": "minecraft:axolotl",
+  "items": "#minecraft:axolotl_food",
+  "chance": 0.33
+}

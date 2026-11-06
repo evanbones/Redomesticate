@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "#minecraft:planks",
+    "minecraft:bone",
+    "minecraft:light_blue_wool"
+  ],
+  "result": {
+    "count": 1,
+    "id": "redomesticate:pet_bed_light_blue"
+  }
+}

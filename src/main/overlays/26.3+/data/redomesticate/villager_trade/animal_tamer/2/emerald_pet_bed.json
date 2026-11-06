@@ -1,0 +1,12 @@
+{
+  "wants": {
+    "id": "minecraft:emerald",
+    "count": 2
+  },
+  "gives": {
+    "id": "redomesticate:pet_bed_white"
+  },
+  "max_uses": 6,
+  "xp": 7,
+  "reputation_discount": 0.05
+}

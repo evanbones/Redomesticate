@@ -1,0 +1,26 @@
+{
+  "wants": {
+    "id": "minecraft:emerald",
+    "count": 18.0
+  },
+  "gives": {
+    "id": "redomesticate:collar_tag"
+  },
+  "given_item_modifiers": [
+    {
+      "function": "minecraft:enchant_randomly",
+      "include_additional_cost_component": true,
+      "only_compatible": true,
+      "options": "#redomesticate:trade_enchantment_book"
+    },
+    {
+      "function": "minecraft:enchant_randomly",
+      "include_additional_cost_component": true,
+      "only_compatible": true,
+      "options": "#redomesticate:trade_enchantment_book"
+    }
+  ],
+  "max_uses": 3.0,
+  "xp": 15.0,
+  "reputation_discount": 0.05
+}

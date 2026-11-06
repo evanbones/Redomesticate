@@ -19,7 +19,7 @@ Redomesticate has been brought into the modern modding era with massive changes:
 
 **Multiloader Support:**
 
-Now officially available on **1.21.1** for both **NeoForge** and **Fabric**!
+Now officially available on **1.21.1/26.x** for both **NeoForge** and **Fabric**!
 
 **No More Citadel!**
 

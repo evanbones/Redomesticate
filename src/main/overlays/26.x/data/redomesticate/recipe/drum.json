@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "L": "minecraft:leather",
+    "P": "#minecraft:planks"
+  },
+  "pattern": [
+    "LLL",
+    "P P",
+    "PPP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "redomesticate:drum"
+  }
+}

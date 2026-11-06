@@ -1,0 +1,223 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "redomesticate:rotten_apple"
+        }
+      ],
+      "name": "rotten_apple",
+      "rolls": 1,
+      "condition": {
+        "chance": 0.05,
+        "type": "minecraft:random_chance"
+      }
+    },
+    {
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "redomesticate:sinister_carrot"
+        }
+      ],
+      "name": "sinister_carrot",
+      "rolls": 1,
+      "condition": {
+        "chance": 0.05,
+        "type": "minecraft:random_chance"
+      }
+    },
+    {
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:book",
+          "modifier": {
+            "add": true,
+            "enchantments": {
+              "redomesticate:bubbling": {
+                "type": "minecraft:uniform",
+                "max": 2,
+                "min": 1
+              }
+            },
+            "type": "minecraft:set_enchantments"
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:book",
+          "modifier": {
+            "add": true,
+            "enchantments": {
+              "redomesticate:amphibious": {
+                "type": "minecraft:uniform",
+                "max": 1,
+                "min": 1
+              }
+            },
+            "type": "minecraft:set_enchantments"
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:book",
+          "modifier": {
+            "add": true,
+            "enchantments": {
+              "redomesticate:vampire": {
+                "type": "minecraft:uniform",
+                "max": 2,
+                "min": 1
+              }
+            },
+            "type": "minecraft:set_enchantments"
+          }
+        }
+      ],
+      "name": "enchant",
+      "rolls": 1,
+      "condition": {
+        "chance": 0.15,
+        "type": "minecraft:random_chance"
+      }
+    },
+    {
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "redomesticate:collar_tag",
+          "modifier": {
+            "levels": {
+              "type": "minecraft:uniform",
+              "max": 40,
+              "min": 12
+            },
+            "options": "#minecraft:on_random_loot",
+            "type": "minecraft:enchant_with_levels"
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "redomesticate:collar_tag",
+          "weight": 2
+        }
+      ],
+      "name": "petshop_chest_collars",
+      "rolls": {
+        "type": "minecraft:uniform",
+        "max": 2,
+        "min": 1
+      },
+      "condition": {
+        "chance": 0.5,
+        "type": "minecraft:random_chance"
+      }
+    },
+    {
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:tropical_fish",
+          "modifier": {
+            "add": false,
+            "count": {
+              "type": "minecraft:uniform",
+              "max": 5,
+              "min": 1
+            },
+            "type": "minecraft:set_count"
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:bone",
+          "weight": 4,
+          "modifier": {
+            "add": false,
+            "count": {
+              "type": "minecraft:uniform",
+              "max": 3,
+              "min": 1
+            },
+            "type": "minecraft:set_count"
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:lead",
+          "weight": 4,
+          "modifier": {
+            "add": false,
+            "count": {
+              "type": "minecraft:uniform",
+              "max": 2,
+              "min": 1
+            },
+            "type": "minecraft:set_count"
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:iron_horse_armor",
+          "weight": 2,
+          "modifier": {
+            "add": false,
+            "count": {
+              "type": "minecraft:uniform",
+              "max": 2,
+              "min": 1
+            },
+            "type": "minecraft:set_count"
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:axolotl_bucket"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:tadpole_bucket",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:emerald",
+          "weight": 3,
+          "modifier": {
+            "add": false,
+            "count": {
+              "type": "minecraft:uniform",
+              "max": 2,
+              "min": 1
+            },
+            "type": "minecraft:set_count"
+          }
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:carrot",
+          "weight": 4,
+          "modifier": {
+            "add": false,
+            "count": {
+              "type": "minecraft:uniform",
+              "max": 2,
+              "min": 1
+            },
+            "type": "minecraft:set_count"
+          }
+        }
+      ],
+      "name": "petshop_chest",
+      "rolls": {
+        "type": "minecraft:uniform",
+        "max": 12,
+        "min": 5
+      }
+    }
+  ],
+  "random_sequence": "redomesticate:chests/petshop_chest"
+}

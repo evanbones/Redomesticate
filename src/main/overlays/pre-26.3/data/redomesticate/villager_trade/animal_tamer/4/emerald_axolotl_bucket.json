@@ -1,0 +1,12 @@
+{
+  "wants": {
+    "id": "minecraft:emerald",
+    "count": 11.0
+  },
+  "gives": {
+    "id": "minecraft:axolotl_bucket"
+  },
+  "max_uses": 2.0,
+  "xp": 15.0,
+  "reputation_discount": 0.05
+}

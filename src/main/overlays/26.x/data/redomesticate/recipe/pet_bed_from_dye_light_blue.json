@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "#redomesticate:pet_beds",
+    "minecraft:light_blue_dye"
+  ],
+  "result": {
+    "count": 1,
+    "id": "redomesticate:pet_bed_light_blue"
+  }
+}

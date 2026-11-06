@@ -1,0 +1,8 @@
+{
+  "type": "redomesticate:mod_loot_modifier",
+  "condition": {
+    "loot_table_id": "minecraft:chests/buried_treasure",
+    "type": "neoforge:loot_table_id"
+  },
+  "loot_type": 1
+}

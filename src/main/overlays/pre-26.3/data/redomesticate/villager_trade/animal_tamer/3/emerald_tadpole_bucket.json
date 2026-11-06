@@ -1,0 +1,12 @@
+{
+  "wants": {
+    "id": "minecraft:emerald",
+    "count": 6.0
+  },
+  "gives": {
+    "id": "minecraft:tadpole_bucket"
+  },
+  "max_uses": 4.0,
+  "xp": 13.0,
+  "reputation_discount": 0.05
+}

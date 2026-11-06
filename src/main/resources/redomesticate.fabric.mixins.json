@@ -1,0 +1,23 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.evandev.redomesticate.fabric.mixin",
+  "compatibilityLevel": "JAVA_${java_version}",
+  "mixins": [
+    "AnvilMenuMixin",
+    "ExplosionMixin",
+    "FabricEntityMixin",
+    "FabricLivingEntityMixin",
+    "ItemEntityMixin",
+    "MobTargetMixin",
+    "ProjectileMixin",
+    "ServerPlayerMixin"
+  ],
+  "client": [
+  ],
+  "server": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
