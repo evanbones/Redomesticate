@@ -1,9 +1,6 @@
-### Added
-
-- Support for Minecraft 26.1, 26.2, and 26.3 (Fabric and NeoForge).
-
 ### Fixed
 
-- Fixed Deflecting and Intimidation effects not showing on dedicated servers.
-- Fixed missing name for the Animal Tamer villager profession.
-- Backend cleanups.
+- Fixed a possible server crash when an enchanted pet unloaded.
+- Fixed pets staying babies for a while after Curse of Immaturity was removed.
+- Fixed a crash when applying Curse of Immaturity to a pet that can't be a baby.
+- Fixed wild camels being treated as tamed pets.

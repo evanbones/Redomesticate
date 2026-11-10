@@ -2,7 +2,11 @@ package com.evandev.redomesticate.util;
 
 import com.evandev.redomesticate.api.IPetbedDataEntity;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+
+import java.util.Map;
+import java.util.Objects;
 
 public class ModEntityData {
     public static CompoundTag getOrCreateEntityTag(LivingEntity entity) {
@@ -16,9 +20,13 @@ public class ModEntityData {
 
     public static void setEntityTag(LivingEntity entity, CompoundTag tag) {
         if (entity instanceof IPetbedDataEntity petbedData) {
+            Map<ResourceLocation, Integer> prevEnchants = petbedData.redomesticate$getCachedEnchants();
             petbedData.redomesticate$setEntityData(tag);
-            petbedData.redomesticate$setCachedEnchants(TameableUtils.getEnchants(entity));
-            TameableUtils.onUpdateEnchants(null, entity);
+            Map<ResourceLocation, Integer> enchants = TameableUtils.getEnchants(entity);
+            petbedData.redomesticate$setCachedEnchants(enchants);
+            if (!Objects.equals(prevEnchants, enchants)) {
+                TameableUtils.onUpdateEnchants(prevEnchants, entity);
+            }
         }
     }
 }

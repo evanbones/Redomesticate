@@ -120,7 +120,9 @@ public class TameableUtils {
     public static void setSafePetHealth(LivingEntity enchanted, double health) {
         CompoundTag tag = ModEntityData.getOrCreateEntityTag(enchanted);
         tag.putDouble(SAFE_PET_HEALTH, health);
-        sync(enchanted, tag);
+        if (enchanted instanceof IPetbedDataEntity petbedData) {
+            petbedData.redomesticate$setEntityData(tag);
+        }
     }
 
     public static boolean isTamed(Entity entity) {
@@ -252,17 +254,10 @@ public class TameableUtils {
 
     private static void setEnchantmentTag(LivingEntity enchanted, ListTag enchants) {
         CompoundTag tag = ModEntityData.getOrCreateEntityTag(enchanted);
-        Map<ResourceLocation, Integer> prevEnchants = getEnchants(enchanted);
         tag.put(ENCHANTMENT_TAG, enchants);
         tag.putInt(COLLAR_SWAP_COOLDOWN, 20);
         tag.putBoolean(COLLAR_TAG, true);
-
-        if (enchanted instanceof IPetbedDataEntity dataEntity) {
-            dataEntity.redomesticate$setCachedEnchants(getEnchants(enchanted));
-        }
-
         sync(enchanted, tag);
-        onUpdateEnchants(prevEnchants, enchanted);
     }
 
     private static boolean isWaterCreature(LivingEntity enchanted) {
@@ -275,11 +270,8 @@ public class TameableUtils {
         boolean amphib = hasEnchant(enchanted, ModEnchantments.AMPHIBIOUS) && !enchanted.isInWaterOrBubble() && isWaterCreature(enchanted);
         AttributeInstance health = enchanted.getAttribute(Attributes.MAX_HEALTH);
         AttributeInstance speed = enchanted.getAttribute(Attributes.MOVEMENT_SPEED);
-        if (hasEnchant(enchanted, ModEnchantments.IMMATURITY_CURSE) || prevEnchants != null && prevEnchants.containsKey(ModEnchantments.IMMATURITY_CURSE.registry())) {
-            //change pose to update client
-            enchanted.setPose(Pose.FALL_FLYING);
-            AgeableMob ageable = (AgeableMob) enchanted;
-            ageable.setBaby(true);
+        boolean wasImmature = prevEnchants != null && prevEnchants.containsKey(ModEnchantments.IMMATURITY_CURSE.location());
+        if (hasEnchant(enchanted, ModEnchantments.IMMATURITY_CURSE) != wasImmature) {
             enchanted.refreshDimensions();
         }
 

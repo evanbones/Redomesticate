@@ -21,8 +21,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.UUID;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.animal.camel.Camel;
 //? if >=26.1 {
 /*import net.minecraft.world.entity.EntityReference;
+import net.minecraft.world.level.storage.ValueInput;
 *///?}
 
 @Mixin(AbstractHorse.class)
@@ -35,8 +38,11 @@ public abstract class AbstractHorseMixin extends Animal implements ITameableEnti
         super(type, level);
     }
 
+    @Unique
+    private static final int REDOMESTICATE$FLAG_TAME = 2;
+
     @Shadow
-    public abstract boolean isTamed();
+    protected abstract boolean getFlag(int flag);
 
     @Shadow
     public abstract void setTamed(boolean tame);
@@ -101,12 +107,31 @@ public abstract class AbstractHorseMixin extends Animal implements ITameableEnti
 
     @Unique
     public boolean redomesticate$isTame() {
-        return this.isTamed() && ModConfig.get().tameableHorse;
+        return this.getFlag(REDOMESTICATE$FLAG_TAME) && ModConfig.get().tameableHorse;
     }
 
     @Unique
     public void redomesticate$setTame(boolean tame) {
         this.setTamed(tame);
+    }
+
+    //? if >=26.1 {
+    /*@Inject(method = "readAdditionalSaveData(Lnet/minecraft/world/level/storage/ValueInput;)V", at = @At("TAIL"))
+    private void readAdditional(ValueInput input, CallbackInfo ci) {
+        this.redomesticate$untameOwnerlessCamel();
+    }
+    *///?} else {
+    @Inject(method = "readAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V", at = @At("TAIL"))
+    private void readAdditional(CompoundTag compound, CallbackInfo ci) {
+        this.redomesticate$untameOwnerlessCamel();
+    }
+    //?}
+
+    @Unique
+    private void redomesticate$untameOwnerlessCamel() {
+        if ((Object) this instanceof Camel && this.redomesticate$getTameOwnerUUID() == null) {
+            this.setTamed(false);
+        }
     }
 
     //? if >=26.1 {
