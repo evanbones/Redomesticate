@@ -37,7 +37,11 @@ import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
+//? if >=26.3 {
+/^import net.neoforged.neoforge.registries.NewDatapackRegistryEvent;
+^///?} else {
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
+//?}
 //? if >=26.1 {
 /^import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
 ^///?} else {
@@ -66,10 +70,17 @@ public class Redomesticate {
         }
     }
 
+    //? if >=26.3 {
+    /^public void onNewDatapackRegistry(NewDatapackRegistryEvent event) {
+        event.worldRegistry(TamingDefinition.REGISTRY_KEY, TamingDefinition.CODEC, TamingDefinition.CODEC);
+        event.worldRegistry(TransformationDefinition.REGISTRY_KEY, TransformationDefinition.CODEC, TransformationDefinition.CODEC);
+    }
+    ^///?} else {
     public void onNewDatapackRegistry(DataPackRegistryEvent.NewRegistry event) {
         event.dataPackRegistry(TamingDefinition.REGISTRY_KEY, TamingDefinition.CODEC, TamingDefinition.CODEC);
         event.dataPackRegistry(TransformationDefinition.REGISTRY_KEY, TransformationDefinition.CODEC, TransformationDefinition.CODEC);
     }
+    //?}
 
     private void commonSetup(final FMLCommonSetupEvent event) {
     }
