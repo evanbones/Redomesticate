@@ -1,6 +1,10 @@
 package com.evandev.redomesticate.registry;
 
 import com.evandev.redomesticate.Constants;
+import com.evandev.redomesticate.platform.registry.RegistrationProvider;
+import com.evandev.redomesticate.platform.registry.RegistryObject;
+import com.mojang.serialization.Codec;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
@@ -8,10 +12,17 @@ import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.LevelBasedValue;
 
 import java.util.Arrays;
+import java.util.Map;
 
 public class ModEnchantments {
+    public static final RegistrationProvider<DataComponentType<?>> EFFECT_COMPONENT_REGISTRY = RegistrationProvider.get(Registries.ENCHANTMENT_EFFECT_COMPONENT_TYPE, Constants.MOD_ID);
+
+    public static final RegistryObject<DataComponentType<Map<String, LevelBasedValue>>> PET_VALUES = EFFECT_COMPONENT_REGISTRY.register("pet_values",
+            () -> DataComponentType.<Map<String, LevelBasedValue>>builder().persistent(Codec.unboundedMap(Codec.STRING, LevelBasedValue.CODEC)).build());
+
     public static final ResourceKey<Enchantment> AMPHIBIOUS = ResourceKey.create(Registries.ENCHANTMENT,
             ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "amphibious"));
     public static final ResourceKey<Enchantment> BLIGHT_CURSE = ResourceKey.create(Registries.ENCHANTMENT,

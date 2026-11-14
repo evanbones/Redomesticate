@@ -7,6 +7,11 @@
     "redomesticate:vampire",
     "redomesticate:health_siphon"
   ],
+  "effects": {
+    "redomesticate:pet_values": {
+      "food_heal_multiplier": 1.5
+    }
+  },
   "max_cost": {
     "base": 25,
     "per_level_above_first": 7

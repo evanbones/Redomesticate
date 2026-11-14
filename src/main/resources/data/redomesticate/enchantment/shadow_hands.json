@@ -9,6 +9,21 @@
     "redomesticate:bubbling",
     "redomesticate:blazing_protection"
   ],
+  "effects": {
+    "redomesticate:pet_values": {
+      "damage": {
+        "type": "minecraft:clamped",
+        "value": {
+          "type": "minecraft:linear",
+          "base": 1,
+          "per_level_above_first": 1
+        },
+        "min": 2,
+        "max": 4
+      },
+      "punch_cooldown_ticks": 5
+    }
+  },
   "max_cost": {
     "base": 25,
     "per_level_above_first": 7

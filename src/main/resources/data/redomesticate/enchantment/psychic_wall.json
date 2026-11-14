@@ -8,6 +8,25 @@
     "redomesticate:deflection",
     "redomesticate:herding"
   ],
+  "effects": {
+    "redomesticate:pet_values": {
+      "width": {
+        "type": "minecraft:linear",
+        "base": 2,
+        "per_level_above_first": 1
+      },
+      "lifespan_ticks": {
+        "type": "minecraft:linear",
+        "base": 100,
+        "per_level_above_first": 100
+      },
+      "cooldown_ticks": {
+        "type": "minecraft:linear",
+        "base": 240,
+        "per_level_above_first": 200
+      }
+    }
+  },
   "max_cost": {
     "base": 25,
     "per_level_above_first": 7

@@ -3,6 +3,11 @@
   "description": {
     "translate": "enchantment.redomesticate.immaturity_curse"
   },
+  "effects": {
+    "redomesticate:pet_values": {
+      "damage_multiplier": 0.7
+    }
+  },
   "max_cost": {
     "base": 25,
     "per_level_above_first": 7

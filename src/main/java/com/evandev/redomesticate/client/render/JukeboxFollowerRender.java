@@ -23,7 +23,6 @@ public class JukeboxFollowerRender extends SimpleEntityRenderer<FollowingJukebox
         poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTicks, entity.yRotO, entity.getYRot())));
         poseStack.translate(0, 0.1F, 0);
         poseStack.scale(1.8F, 1.8F, 1.8F);
-        // item stacks can't be created before the world's components are bound, so build it when drawing
         ItemStack jukebox = new ItemStack(Items.JUKEBOX);
         jukebox.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
         sink.item(jukebox, entity, poseStack, light);

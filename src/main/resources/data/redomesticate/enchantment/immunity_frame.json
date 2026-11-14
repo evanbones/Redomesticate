@@ -7,6 +7,15 @@
     "redomesticate:deflection",
     "redomesticate:blazing_protection"
   ],
+  "effects": {
+    "redomesticate:pet_values": {
+      "immunity_ticks": {
+        "type": "minecraft:linear",
+        "base": 40,
+        "per_level_above_first": 20
+      }
+    }
+  },
   "max_cost": {
     "base": 25,
     "per_level_above_first": 7

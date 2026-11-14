@@ -3,6 +3,15 @@
   "description": {
     "translate": "enchantment.redomesticate.charisma"
   },
+  "effects": {
+    "redomesticate:pet_values": {
+      "discount": {
+        "type": "minecraft:linear",
+        "base": 10,
+        "per_level_above_first": 10
+      }
+    }
+  },
   "max_cost": {
     "base": 25,
     "per_level_above_first": 7

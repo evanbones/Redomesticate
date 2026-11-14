@@ -4,6 +4,11 @@
     "translate": "enchantment.redomesticate.total_recall"
   },
   "exclusive_set": "redomesticate:undead_curse",
+  "effects": {
+    "redomesticate:pet_values": {
+      "health_threshold": 2
+    }
+  },
   "max_cost": {
     "base": 25,
     "per_level_above_first": 7

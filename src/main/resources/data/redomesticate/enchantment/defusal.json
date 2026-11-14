@@ -4,6 +4,15 @@
     "translate": "enchantment.redomesticate.defusal"
   },
   "exclusive_set": "redomesticate:deflection",
+  "effects": {
+    "redomesticate:pet_values": {
+      "radius": {
+        "type": "minecraft:linear",
+        "base": 10,
+        "per_level_above_first": 10
+      }
+    }
+  },
   "max_cost": {
     "base": 14,
     "per_level_above_first": 7

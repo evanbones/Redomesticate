@@ -3,6 +3,15 @@
   "description": {
     "translate": "enchantment.redomesticate.speedster"
   },
+  "effects": {
+    "redomesticate:pet_values": {
+      "movement_speed": {
+        "type": "minecraft:linear",
+        "base": 0.075,
+        "per_level_above_first": 0.075
+      }
+    }
+  },
   "max_cost": {
     "base": 25,
     "per_level_above_first": 7

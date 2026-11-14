@@ -21,7 +21,6 @@ public class ModConfig {
     private static ModConfig INSTANCE;
     private transient final Map<ResourceLocation, Boolean> enchantmentCache = new ConcurrentHashMap<>();
 
-    // General
     public boolean trinaryCommandSystem = true;
     public boolean tameableHorse = true;
     public boolean tameableFox = true;
@@ -34,7 +33,6 @@ public class ModConfig {
     public boolean petWontAttackWhenInjured = true;
     public double petInjuredStatusHealthRatio = 0.2D;
 
-    // Loot Chances
     public boolean petCurseEnchantmentsLootOnly = true;
     public double blazingProtectionLootChance = 0.2D;
     public double sinisterCarrotLootChance = 0.3D;
@@ -44,7 +42,6 @@ public class ModConfig {
     public double muffledLootChance = 0.19D;
     public double oreScentingLootChance = 0.15D;
 
-    // Enchantments
     public boolean enableAmphibious = true;
     public boolean enableBlightCurse = true;
     public boolean enableBubbling = true;

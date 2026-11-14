@@ -3,6 +3,7 @@ package com.evandev.redomesticate.mixin;
 import com.evandev.redomesticate.util.VersionCompat;
 import com.evandev.redomesticate.util.NbtCompat;
 import com.evandev.redomesticate.api.ICommandableMob;
+import com.evandev.redomesticate.compat.alexsmobs.AlexsMobsCompat;
 import com.evandev.redomesticate.platform.Services;
 import com.evandev.redomesticate.api.ITameableEntity;
 import com.evandev.redomesticate.api.PetCommand;
@@ -82,7 +83,9 @@ public abstract class MobMixin extends LivingEntity implements ICommandableMob, 
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
     private void redomesticate$readUniversalData(ValueInput input, CallbackInfo ci) {
-        this.redomesticate$setCommand(input.getIntOr("RedomesticateCommand", 0));
+        if (!AlexsMobsCompat.hasNativeCommands((Mob) (Object) this)) {
+            this.redomesticate$setCommand(input.getIntOr("RedomesticateCommand", 0));
+        }
         this.redomesticate$setTame(input.getBooleanOr("RedomesticateTamed", false));
         input.read("RedomesticateOwner", UUIDUtil.CODEC).ifPresent(this::redomesticate$setTameOwnerUUID);
     }
@@ -98,7 +101,9 @@ public abstract class MobMixin extends LivingEntity implements ICommandableMob, 
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
     private void redomesticate$readUniversalData(CompoundTag tag, CallbackInfo ci) {
-        this.redomesticate$setCommand(NbtCompat.getInt(tag, "RedomesticateCommand"));
+        if (!AlexsMobsCompat.hasNativeCommands((Mob) (Object) this)) {
+            this.redomesticate$setCommand(NbtCompat.getInt(tag, "RedomesticateCommand"));
+        }
         this.redomesticate$setTame(NbtCompat.getBoolean(tag, "RedomesticateTamed"));
         if (NbtCompat.hasUUID(tag, "RedomesticateOwner")) {
             this.redomesticate$setTameOwnerUUID(NbtCompat.getUUID(tag, "RedomesticateOwner"));
@@ -108,6 +113,9 @@ public abstract class MobMixin extends LivingEntity implements ICommandableMob, 
 
     @Override
     public int redomesticate$getCommand() {
+        if (AlexsMobsCompat.hasNativeCommands((Mob) (Object) this)) {
+            return AlexsMobsCompat.getCommand((Mob) (Object) this).getId();
+        }
         //? if >=26.1 {
         /*return Services.PLATFORM.getPetState((Mob) (Object) this).command();
         *///?} else {
@@ -117,6 +125,10 @@ public abstract class MobMixin extends LivingEntity implements ICommandableMob, 
 
     @Override
     public void redomesticate$setCommand(int command) {
+        if (AlexsMobsCompat.hasNativeCommands((Mob) (Object) this)) {
+            AlexsMobsCompat.setCommand((Mob) (Object) this, PetCommand.fromId(command));
+            return;
+        }
         //? if >=26.1 {
         /*Mob mob = (Mob) (Object) this;
         Services.PLATFORM.setPetState(mob, Services.PLATFORM.getPetState(mob).withCommand(command));

@@ -10,16 +10,13 @@ import net.minecraft.world.item.enchantment.Enchantment;
 
 public class ModTags {
 
-    // Items
     public static final TagKey<Item> COLLAR_TAG_KEY = registerItem("collar_tag_key");
     public static final TagKey<Item> PET_BED_KEY = registerItem("pet_beds");
     public static final TagKey<Item> TAME_FROGS_WITH = registerItem("tame_frogs_with");
 
-    // Enchantments
     public static final TagKey<Enchantment> TRADABLE_ENCHANTMENT_KEY = TagKey.create(Registries.ENCHANTMENT, ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "trade_enchantment_book"));
     public static final TagKey<Enchantment> INFUSE_EXTRA = TagKey.create(Registries.ENCHANTMENT, ResourceLocation.parse("enchantinginfuser:infuse_extra"));
 
-    // Entities
     public static final TagKey<EntityType<?>> PETSTORE_FISHTANK = registerEntity("petstore_fishtank");
     public static final TagKey<EntityType<?>> PETSTORE_CAGE_0 = registerEntity("petstore_cage_0");
     public static final TagKey<EntityType<?>> PETSTORE_CAGE_1 = registerEntity("petstore_cage_1");

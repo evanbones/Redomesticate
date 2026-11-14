@@ -9,6 +9,11 @@
     "redomesticate:warping_bite",
     "redomesticate:blazing_protection"
   ],
+  "effects": {
+    "redomesticate:pet_values": {
+      "freeze_ticks": 200
+    }
+  },
   "max_cost": {
     "base": 25,
     "per_level_above_first": 7

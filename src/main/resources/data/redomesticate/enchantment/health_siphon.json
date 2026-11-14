@@ -9,6 +9,11 @@
     "redomesticate:gluttonous",
     "redomesticate:healing_aura"
   ],
+  "effects": {
+    "redomesticate:pet_values": {
+      "range": 100
+    }
+  },
   "max_cost": {
     "base": 25,
     "per_level_above_first": 7

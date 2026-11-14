@@ -140,8 +140,5 @@ public abstract class AdvancedEntityModel<T extends Entity> extends BasicEntityM
         model.rotationPointZ += progress * z / divisor;
     }
 
-    /*
-        Return a list of all parts needed to be reset every tick.
-     */
     public abstract Iterable<AdvancedModelBox> getAllParts();
 }

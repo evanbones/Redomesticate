@@ -11,11 +11,12 @@ public class RedomesticatePlugin implements IWailaPlugin {
 
     @Override
     public void register(IWailaCommonRegistration registration) {
-        IWailaPlugin.super.register(registration);
+        registration.registerEntityDataProvider(PetOwnerProvider.INSTANCE, LivingEntity.class);
     }
 
     @Override
     public void registerClient(IWailaClientRegistration registration) {
+        registration.registerEntityComponent(PetOwnerProvider.INSTANCE, LivingEntity.class);
         registration.registerEntityComponent(RedomesticateComponentProvider.INSTANCE, LivingEntity.class);
     }
 }

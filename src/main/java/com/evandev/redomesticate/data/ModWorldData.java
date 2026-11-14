@@ -39,10 +39,6 @@ public class ModWorldData extends SavedData {
             DataFixTypes.SAVED_DATA_COMMAND_STORAGE);
     *///?}
 
-    private ModWorldData() {
-        super();
-    }
-
     public static ModWorldData create() {
         return new ModWorldData();
     }

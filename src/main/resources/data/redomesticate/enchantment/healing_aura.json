@@ -8,6 +8,19 @@
     "redomesticate:health_siphon",
     "redomesticate:rejuvenation"
   ],
+  "effects": {
+    "redomesticate:pet_values": {
+      "radius": 4,
+      "aura_ticks": 200,
+      "cooldown_ticks": 600,
+      "regeneration_ticks": 100,
+      "regeneration_amplifier": {
+        "type": "minecraft:linear",
+        "base": 0,
+        "per_level_above_first": 1
+      }
+    }
+  },
   "max_cost": {
     "base": 25,
     "per_level_above_first": 7

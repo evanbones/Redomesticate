@@ -1,5 +1,6 @@
 package com.evandev.redomesticate.util;
 
+import net.minecraft.world.item.enchantment.LevelBasedValue;
 import com.evandev.redomesticate.Constants;
 import com.evandev.redomesticate.api.ICommandableMob;
 import com.evandev.redomesticate.api.IPetbedDataEntity;
@@ -15,7 +16,6 @@ import com.evandev.redomesticate.registry.ModEntities;
 import com.evandev.redomesticate.registry.ModParticles;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.ByteTag;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
@@ -94,20 +94,8 @@ public class TameableUtils {
     public static boolean shouldUnloadToLantern(LivingEntity tameable) {
         if (tameable instanceof ICommandableMob commandableMob) {
             return commandableMob.redomesticate$getPetCommand() == PetCommand.FOLLOW;
-        } else {
-            CompoundTag tag = NbtCompat.saveEntity(tameable);
-            int command = -1;
-            // compat with alexs mobs
-            for (String s : NbtCompat.keys(tag)) {
-                if (s.endsWith("Command") && tag.get(s) instanceof ByteTag) {
-                    command = NbtCompat.getInt(tag, s);
-                }
-            }
-            if (command != -1) {
-                return command == 1;
-            } else if (tameable instanceof TamableAnimal animal) {
-                return !animal.isOrderedToSit();
-            }
+        } else if (tameable instanceof TamableAnimal animal) {
+            return !animal.isOrderedToSit();
         }
         return false;
     }
@@ -276,7 +264,7 @@ public class TameableUtils {
         }
 
         if (health != null) {
-            AttributeModifier healthBoostPetUpgrade = new AttributeModifier(HEALTH_BOOST_UUID, healthExtra * 10, AttributeModifier.Operation.ADD_VALUE);
+            AttributeModifier healthBoostPetUpgrade = new AttributeModifier(HEALTH_BOOST_UUID, EnchantmentValues.get(enchanted, ModEnchantments.HEALTH_BOOST, healthExtra, "max_health", LevelBasedValue.perLevel(10)), AttributeModifier.Operation.ADD_VALUE);
 
             if (healthExtra > 0) {
                 if (health.hasModifier(healthBoostPetUpgrade.id())) {
@@ -290,7 +278,7 @@ public class TameableUtils {
             }
         }
         if (speed != null) {
-            AttributeModifier speedsterPetUpgrade = new AttributeModifier(SPEED_BOOST_UUID, speedExtra * 0.075F, AttributeModifier.Operation.ADD_VALUE);
+            AttributeModifier speedsterPetUpgrade = new AttributeModifier(SPEED_BOOST_UUID, EnchantmentValues.get(enchanted, ModEnchantments.SPEEDSTER, speedExtra, "movement_speed", LevelBasedValue.perLevel(0.075F)), AttributeModifier.Operation.ADD_VALUE);
 
             if (speedExtra > 0) {
                 if (speed.hasModifier(speedsterPetUpgrade.id())) {
@@ -302,7 +290,7 @@ public class TameableUtils {
             } else {
                 speed.removeModifier(speedsterPetUpgrade);
             }
-            AttributeModifier speed_aqua = new AttributeModifier(SPEED_BOOST_AQUATIC_LAND_UUID, 0.13F, AttributeModifier.Operation.ADD_VALUE);
+            AttributeModifier speed_aqua = new AttributeModifier(SPEED_BOOST_AQUATIC_LAND_UUID, EnchantmentValues.get(enchanted, ModEnchantments.AMPHIBIOUS, "land_speed", LevelBasedValue.constant(0.13F)), AttributeModifier.Operation.ADD_VALUE);
 
             if (amphib) {
                 if (speed.hasModifier(speed_aqua.id())) {
@@ -446,8 +434,9 @@ public class TameableUtils {
     }
 
     public static List<LivingEntity> getAuraHealables(LivingEntity pet) {
-        return pet.level().getEntitiesOfClass(LivingEntity.class, pet.getBoundingBox().inflate(4, 4, 4),
-                e -> !e.isSpectator() && hasSameOwnerAs(e, pet) && e.distanceTo(pet) < 4 && e.getHealth() < e.getMaxHealth()
+        float radius = EnchantmentValues.get(pet, ModEnchantments.HEALING_AURA, "radius", LevelBasedValue.constant(4));
+        return pet.level().getEntitiesOfClass(LivingEntity.class, pet.getBoundingBox().inflate(radius),
+                e -> !e.isSpectator() && hasSameOwnerAs(e, pet) && e.distanceTo(pet) < radius && e.getHealth() < e.getMaxHealth()
         );
     }
 
@@ -520,7 +509,8 @@ public class TameableUtils {
         boolean interval = (scary.tickCount + scary.getId()) % Math.max(140, 600 - level * 200) == 0;
         if (interval || scary.hurtTime == 4 || getIntimidationCooldown(scary) > 0) {
             Predicate<Entity> notOnTeamAndMonster = (animal) -> animal instanceof Monster && !hasSameOwnerAs((LivingEntity) animal, scary) && animal.distanceTo(scary) > 3 + scary.getBbWidth() * 1.6F;
-            List<PathfinderMob> list = scary.level().getEntitiesOfClass(PathfinderMob.class, scary.getBoundingBox().inflate(10 * level, 8 * level, 10 * level), EntitySelector.NO_SPECTATORS.and(notOnTeamAndMonster));
+            float radius = EnchantmentValues.get(scary, ModEnchantments.INTIMIDATION, level, "radius", LevelBasedValue.perLevel(10));
+            List<PathfinderMob> list = scary.level().getEntitiesOfClass(PathfinderMob.class, scary.getBoundingBox().inflate(radius, radius * 0.8F, radius), EntitySelector.NO_SPECTATORS.and(notOnTeamAndMonster));
             list.sort(Comparator.comparingDouble(scary::distanceToSqr));
             if (!list.isEmpty()) {
                 if (getIntimidationCooldown(scary) > 0 && !interval) {
@@ -539,7 +529,7 @@ public class TameableUtils {
                     }
                 }
                 for (PathfinderMob monster : list) {
-                    Vec3 vec = LandRandomPos.getPosAway(monster, 11 * level, 7, scary.position());
+                    Vec3 vec = LandRandomPos.getPosAway(monster, EnchantmentValues.getInt(scary, ModEnchantments.INTIMIDATION, level, "flee_distance", LevelBasedValue.perLevel(11)), 7, scary.position());
                     if (vec != null) {
                         monster.getNavigation().moveTo(vec.x, vec.y, vec.z, 1.5D);
                     }
@@ -717,7 +707,7 @@ public class TameableUtils {
         List<LivingEntity> list = player.level().getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(25, 8, 25), EntitySelector.NO_SPECTATORS.and(pet));
         int charismas = 0;
         for (LivingEntity entity : list) {
-            charismas += 10 * getEnchantLevel(entity, ModEnchantments.CHARISMA);
+            charismas += EnchantmentValues.getInt(entity, ModEnchantments.CHARISMA, "discount", LevelBasedValue.perLevel(10));
         }
         return Math.min(charismas, 50);
     }

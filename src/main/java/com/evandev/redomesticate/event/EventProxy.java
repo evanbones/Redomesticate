@@ -1,5 +1,7 @@
 package com.evandev.redomesticate.event;
 
+import net.minecraft.world.item.enchantment.LevelBasedValue;
+import com.evandev.redomesticate.util.EnchantmentValues;
 import com.evandev.redomesticate.util.VersionCompat;
 import net.minecraft.world.item.enchantment.Enchantment;
 import com.evandev.redomesticate.util.NbtCompat;
@@ -256,7 +258,7 @@ public class EventProxy {
     public static float onLivingDamageModifier(LivingEntity entity, DamageSource source, float amount) {
         if (source.getEntity() instanceof LivingEntity attacker && TameableUtils.isTamed(attacker)) {
             if (TameableUtils.hasEnchant(attacker, ModEnchantments.IMMATURITY_CURSE)) {
-                return (float) Math.ceil(amount * 0.7F);
+                return (float) Math.ceil(amount * EnchantmentValues.get(attacker, ModEnchantments.IMMATURITY_CURSE, "damage_multiplier", LevelBasedValue.constant(0.7F)));
             }
         }
         return amount;
@@ -284,7 +286,7 @@ public class EventProxy {
             if (TameableUtils.hasEnchant(entity, ModEnchantments.IMMUNITY_FRAME)) {
                 int enchantLvl = TameableUtils.getEnchantLevel(entity, ModEnchantments.IMMUNITY_FRAME);
                 if (TameableUtils.getImmuneTime(entity) <= 0) {
-                    TameableUtils.setImmuneTime(entity, 20 + enchantLvl * 20);
+                    TameableUtils.setImmuneTime(entity, EnchantmentValues.getInt(entity, ModEnchantments.IMMUNITY_FRAME, enchantLvl, "immunity_ticks", LevelBasedValue.perLevel(40, 20)));
                 } else {
                     flag = true;
                     isCanceled = true;
@@ -322,13 +324,13 @@ public class EventProxy {
                     }
                     entity.playSound(ModSounds.BLAZING_PROTECTION.get(), 1, entity.getVoicePitch());
                     TameableUtils.setBlazingProtectionBars(entity, bars - 1);
-                    TameableUtils.setBlazingProtectionCooldown(entity, 600);
+                    TameableUtils.setBlazingProtectionCooldown(entity, EnchantmentValues.getInt(entity, ModEnchantments.BLAZING_PROTECTION, "hit_cooldown_ticks", LevelBasedValue.constant(600)));
                 }
             }
 
             if (!flag && TameableUtils.hasEnchant(entity, ModEnchantments.HEALTH_SIPHON)) {
                 Entity owner = TameableUtils.getOwnerOf(entity);
-                if (owner != null && owner.isAlive() && owner.distanceTo(entity) < 100 && owner != entity) {
+                if (owner != null && owner.isAlive() && owner.distanceTo(entity) < EnchantmentValues.get(entity, ModEnchantments.HEALTH_SIPHON, "range", LevelBasedValue.constant(100)) && owner != entity) {
                     owner.hurt(source, amount);
                     isCanceled = true;
                     flag = true;
@@ -336,7 +338,7 @@ public class EventProxy {
                 }
             }
 
-            if (!flag && TameableUtils.hasEnchant(entity, ModEnchantments.TOTAL_RECALL) && entity.getHealth() - amount <= 2.0D) {
+            if (!flag && TameableUtils.hasEnchant(entity, ModEnchantments.TOTAL_RECALL) && entity.getHealth() - amount <= EnchantmentValues.get(entity, ModEnchantments.TOTAL_RECALL, "health_threshold", LevelBasedValue.constant(2))) {
                 UUID owner = TameableUtils.getOwnerUUIDOf(entity);
                 if (owner != null) {
                     if (entity instanceof Mob mob) {
@@ -363,14 +365,17 @@ public class EventProxy {
                     lightning.setFromEntityID(attacker.getId());
                     lightning.setToEntityID(entity.getId());
                     lightning.copyPosition(entity);
-                    lightning.setChainsLeft(3 + lightningLevel * 3);
+                    lightning.setChainsLeft(EnchantmentValues.getInt(attacker, ModEnchantments.CHAIN_LIGHTNING, lightningLevel, "chains", LevelBasedValue.perLevel(6, 3)));
                     entity.level().addFreshEntity(lightning);
                     entity.playSound(ModSounds.CHAIN_LIGHTNING.get(), 1F, 1F);
                 }
             }
             if (vampireLevel > 0) {
                 if (attacker.getHealth() < attacker.getMaxHealth()) {
-                    float f = Mth.clamp(amount * vampireLevel * 0.5F, 1F, 10F);
+                    float multiplier = EnchantmentValues.get(attacker, ModEnchantments.VAMPIRE, vampireLevel, "heal_multiplier", LevelBasedValue.perLevel(0.5F));
+                    float minHeal = EnchantmentValues.get(attacker, ModEnchantments.VAMPIRE, vampireLevel, "min_heal", LevelBasedValue.constant(1));
+                    float maxHeal = EnchantmentValues.get(attacker, ModEnchantments.VAMPIRE, vampireLevel, "max_heal", LevelBasedValue.constant(10));
+                    float f = Mth.clamp(amount * multiplier, minHeal, maxHeal);
                     attacker.heal(f);
                     if (entity.level() instanceof ServerLevel) {
                         for (int i = 0; i < 5 + entity.getRandom().nextInt(3); i++) {
@@ -389,7 +394,7 @@ public class EventProxy {
                     if (bubble != null) {
                         bubble.copyPosition(entity);
                         VersionCompat.startRiding(entity, bubble);
-                        bubble.setPopsIn(bubblingLevel * 40 + 40);
+                        bubble.setPopsIn(EnchantmentValues.getInt(attacker, ModEnchantments.BUBBLING, bubblingLevel, "bubble_ticks", LevelBasedValue.perLevel(80, 40)));
                         entity.level().addFreshEntity(bubble);
                         entity.playSound(ModSounds.GIANT_BUBBLE_INFLATE.get(), 1F, 1F);
                     }
@@ -397,7 +402,7 @@ public class EventProxy {
             }
 
             if (TameableUtils.hasEnchant(attacker, ModEnchantments.FROST_FANG)) {
-                entity.setTicksFrozen(entity.getTicksRequiredToFreeze() + 200);
+                entity.setTicksFrozen(entity.getTicksRequiredToFreeze() + EnchantmentValues.getInt(attacker, ModEnchantments.FROST_FANG, "freeze_ticks", LevelBasedValue.constant(200)));
                 Vec3 vec3 = entity.getEyePosition().subtract(attacker.getEyePosition()).normalize().scale(attacker.getBbWidth() + 0.5F);
                 Vec3 vec32 = attacker.getEyePosition().add(vec3);
                 for (int i = 0; i < 3 + attacker.getRandom().nextInt(3); i++) {
@@ -410,10 +415,11 @@ public class EventProxy {
             }
 
             if (!entity.level().isClientSide() && TameableUtils.hasEnchant(attacker, ModEnchantments.WARPING_BITE)) {
+                int range = Math.max(1, EnchantmentValues.getInt(attacker, ModEnchantments.WARPING_BITE, "teleport_range", LevelBasedValue.constant(16)));
                 for (int i = 0; i < 16; ++i) {
-                    double d3 = entity.getX() + (attacker.getRandom().nextDouble() - 0.5D) * 16.0D;
-                    double d4 = Mth.clamp(entity.getY() + (double) (attacker.getRandom().nextInt(16) - 8), entity.level().getMinBuildHeight(), entity.level().getMinBuildHeight() + ((ServerLevel) entity.level()).getLogicalHeight() - 1);
-                    double d5 = entity.getZ() + (attacker.getRandom().nextDouble() - 0.5D) * 16.0D;
+                    double d3 = entity.getX() + (attacker.getRandom().nextDouble() - 0.5D) * range;
+                    double d4 = Mth.clamp(entity.getY() + (double) (attacker.getRandom().nextInt(range) - range / 2), entity.level().getMinBuildHeight(), entity.level().getMinBuildHeight() + ((ServerLevel) entity.level()).getLogicalHeight() - 1);
+                    double d5 = entity.getZ() + (attacker.getRandom().nextDouble() - 0.5D) * range;
                     //? if >=26.3 {
                 /*if (entity.randomTeleport(d3, d4, d5, true, state -> false)) {
                 *///?} else {
@@ -458,13 +464,16 @@ public class EventProxy {
         if (entity instanceof Mob mob) {
             ITameableEntity tameable = (ITameableEntity) mob;
 
-            if (tameable.redomesticate$isTame()) {
-                UniversalAIManager.applyPetAI(mob);
+            if (TameableUtils.isTamed(mob)) {
                 TameableUtils.onUpdateEnchants(null, mob);
 
                 if (TameableUtils.hasEnchant(mob, ModEnchantments.HEALTH_BOOST)) {
                     mob.setHealth((float) Math.max(mob.getHealth(), TameableUtils.getSafePetHealth(mob)));
                 }
+            }
+
+            if (tameable.redomesticate$isTame()) {
+                UniversalAIManager.applyPetAI(mob);
 
                 if (mob.isAlive()) {
                     ModWorldData data = ModWorldData.get(level);
@@ -557,14 +566,14 @@ public class EventProxy {
     }
 
     public static boolean onExplosion(Level level, Explosion explosion) {
-        float dist = 30;
+        float dist = 64;
         Vec3 center = explosion.center();
         Vec3 bottom = center.add(-dist, -dist, -dist);
         Vec3 top = center.add(dist, dist, dist);
         Predicate<Entity> defusal = (animal) -> TameableUtils.isTamed(animal) && TameableUtils.hasEnchant((LivingEntity) animal, ModEnchantments.DEFUSAL);
         boolean flag = false;
         for (LivingEntity defuser : level.getEntitiesOfClass(LivingEntity.class, new AABB(bottom, top), EntitySelector.NO_SPECTATORS.and(defusal))) {
-            float eLevel = 10 * TameableUtils.getEnchantLevel(defuser, ModEnchantments.DEFUSAL);
+            float eLevel = EnchantmentValues.get(defuser, ModEnchantments.DEFUSAL, "radius", LevelBasedValue.perLevel(10));
             if (defuser.distanceToSqr(center) <= eLevel * eLevel) {
                 flag = true;
                 break;
@@ -658,13 +667,13 @@ public class EventProxy {
                 if (enchants != null && !enchants.isEmpty()) {
                     if (TameableUtils.hasEnchant(pet, ModEnchantments.BLAZING_PROTECTION) && !entity.level().isClientSide()) {
                         int bars = TameableUtils.getBlazingProtectionBars(pet);
-                        if (bars < 2 * TameableUtils.getEnchantLevel(pet, ModEnchantments.BLAZING_PROTECTION)) {
+                        if (bars < EnchantmentValues.getInt(pet, ModEnchantments.BLAZING_PROTECTION, "max_charges", LevelBasedValue.perLevel(2))) {
                             int cooldown = TameableUtils.getBlazingProtectionCooldown(pet);
                             if (cooldown > 0) {
                                 cooldown--;
                             } else {
                                 TameableUtils.setBlazingProtectionBars(pet, bars + 1);
-                                cooldown = 200;
+                                cooldown = EnchantmentValues.getInt(pet, ModEnchantments.BLAZING_PROTECTION, "recharge_ticks", LevelBasedValue.constant(200));
                             }
                             TameableUtils.setBlazingProtectionCooldown(pet, cooldown);
                         }
@@ -761,7 +770,7 @@ public class EventProxy {
                                             }
                                         }
                                         if (flag) {
-                                            TameableUtils.setShadowPunchCooldown(pet, 5);
+                                            TameableUtils.setShadowPunchCooldown(pet, EnchantmentValues.getInt(pet, ModEnchantments.SHADOW_HANDS, shadowHandsLevel, "punch_cooldown_ticks", LevelBasedValue.constant(5)));
                                         }
                                     } else {
                                         TameableUtils.setShadowPunchCooldown(pet, cooldown - 1);
@@ -771,7 +780,7 @@ public class EventProxy {
                                             if (punchProgress[i] < 10) {
                                                 punchProgress[i] = punchProgress[i] + 1;
                                             } else {
-                                                punching.hurt(punching.damageSources().mobAttack(pet), Mth.clamp(shadowHandsLevel, 2, 4));
+                                                punching.hurt(punching.damageSources().mobAttack(pet), EnchantmentValues.get(pet, ModEnchantments.SHADOW_HANDS, shadowHandsLevel, "damage", new LevelBasedValue.Clamped(LevelBasedValue.perLevel(1), 2, 4)));
                                                 striking[i] = 0;
                                             }
                                         }
@@ -816,8 +825,11 @@ public class EventProxy {
                     }
                     int oreLvl = TameableUtils.getEnchantLevel(pet, ModEnchantments.ORE_SCENTING);
                     if (oreLvl > 0 && !entity.level().isClientSide() && entity.isAlive()) {
-                        int interval = 100 + Math.max(150, 550 - oreLvl * 100);
-                        TameableUtils.detectRandomOres(pet, interval, 5 + oreLvl * 2, oreLvl * 50, oreLvl * 3);
+                        int interval = Math.max(31, EnchantmentValues.getInt(pet, ModEnchantments.ORE_SCENTING, oreLvl, "scan_interval_ticks", LevelBasedValue.perLevel(550, -100)));
+                        int range = EnchantmentValues.getInt(pet, ModEnchantments.ORE_SCENTING, oreLvl, "range", LevelBasedValue.perLevel(7, 2));
+                        int highlightTicks = EnchantmentValues.getInt(pet, ModEnchantments.ORE_SCENTING, oreLvl, "highlight_ticks", LevelBasedValue.perLevel(50));
+                        int maxOres = EnchantmentValues.getInt(pet, ModEnchantments.ORE_SCENTING, oreLvl, "max_ores", LevelBasedValue.perLevel(3));
+                        TameableUtils.detectRandomOres(pet, interval, range, highlightTicks, maxOres);
                     }
                     if (TameableUtils.hasEnchant(pet, ModEnchantments.LINKED_INVENTORY)) {
                         if (!pet.canPickUpLoot()) {
@@ -830,19 +842,22 @@ public class EventProxy {
                             List<LivingEntity> hurtNearby = TameableUtils.getAuraHealables(pet);
                             for (LivingEntity needsHealing : hurtNearby) {
                                 if (!needsHealing.hasEffect(MobEffects.REGENERATION)) {
-                                    needsHealing.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 100, TameableUtils.getEnchantLevel(pet, ModEnchantments.HEALING_AURA) - 1));
+                                    needsHealing.addEffect(new MobEffectInstance(MobEffects.REGENERATION,
+                                            EnchantmentValues.getInt(pet, ModEnchantments.HEALING_AURA, "regeneration_ticks", LevelBasedValue.constant(100)),
+                                            EnchantmentValues.getInt(pet, ModEnchantments.HEALING_AURA, "regeneration_amplifier", LevelBasedValue.perLevel(0, 1))));
                                 }
                             }
                             time--;
                             if (time == 0) {
-                                time = -600 - pet.getRandom().nextInt(600);
+                                int cooldown = Math.max(1, EnchantmentValues.getInt(pet, ModEnchantments.HEALING_AURA, "cooldown_ticks", LevelBasedValue.constant(600)));
+                                time = -cooldown - pet.getRandom().nextInt(cooldown);
                             }
                         } else if (time < 0) {
                             time++;
                         } else if ((pet.tickCount + pet.getId()) % 200 == 0 || TameableUtils.getHealingAuraImpulse(pet)) {
                             List<LivingEntity> hurtNearby = TameableUtils.getAuraHealables(pet);
                             if (!hurtNearby.isEmpty()) {
-                                time = 200;
+                                time = EnchantmentValues.getInt(pet, ModEnchantments.HEALING_AURA, "aura_ticks", LevelBasedValue.constant(200));
                             }
                             TameableUtils.setHealingAuraImpulse(pet, false);
                         }
@@ -870,7 +885,7 @@ public class EventProxy {
                                 }
                             }
                             if (blocking != null) {
-                                int width = psychicWallLevel + 1;
+                                int width = EnchantmentValues.getInt(pet, ModEnchantments.PSYCHIC_WALL, psychicWallLevel, "width", LevelBasedValue.perLevel(2, 1));
                                 float yAdditional = blocking.getBbHeight() * 0.5F + width * 0.5F;
                                 Vec3 vec3 = blockingFrom.position().add(0, yAdditional, 0);
                                 Vec3 vec32 = blocking.position().add(0, yAdditional, 0);
@@ -883,10 +898,10 @@ public class EventProxy {
                                     wall.setPos(avg.x, avg.y, avg.z);
                                     wall.setBlockWidth(width);
                                     wall.setCreatorId(pet.getUUID());
-                                    wall.setLifespan(psychicWallLevel * 100);
+                                    wall.setLifespan(EnchantmentValues.getInt(pet, ModEnchantments.PSYCHIC_WALL, psychicWallLevel, "lifespan_ticks", LevelBasedValue.perLevel(100)));
                                     wall.setWallDirection(dir);
                                     pet.level().addFreshEntity(wall);
-                                    TameableUtils.setPsychicWallCooldown(pet, psychicWallLevel * 200 + 40);
+                                    TameableUtils.setPsychicWallCooldown(pet, EnchantmentValues.getInt(pet, ModEnchantments.PSYCHIC_WALL, psychicWallLevel, "cooldown_ticks", LevelBasedValue.perLevel(240, 200)));
                                 }
                             }
                         }
@@ -894,7 +909,7 @@ public class EventProxy {
 
                     int shepherdLvl = TameableUtils.getEnchantLevel(pet, ModEnchantments.SHEPHERD);
                     if (shepherdLvl > 0) {
-                        TameableUtils.attractAnimals(pet, shepherdLvl * 3);
+                        TameableUtils.attractAnimals(pet, EnchantmentValues.getInt(pet, ModEnchantments.SHEPHERD, shepherdLvl, "max_animals", LevelBasedValue.perLevel(3)));
                     }
                     if (TameableUtils.hasEnchant(pet, ModEnchantments.MAGNETIC)) {
                         Entity sucking = TameableUtils.getPetAttackTarget(pet);

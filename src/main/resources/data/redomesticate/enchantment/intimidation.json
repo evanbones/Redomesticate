@@ -7,6 +7,20 @@
     "redomesticate:magnetic",
     "redomesticate:warping_bite"
   ],
+  "effects": {
+    "redomesticate:pet_values": {
+      "radius": {
+        "type": "minecraft:linear",
+        "base": 10,
+        "per_level_above_first": 10
+      },
+      "flee_distance": {
+        "type": "minecraft:linear",
+        "base": 11,
+        "per_level_above_first": 11
+      }
+    }
+  },
   "max_cost": {
     "base": 25,
     "per_level_above_first": 7

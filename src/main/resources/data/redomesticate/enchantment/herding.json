@@ -9,6 +9,15 @@
     "redomesticate:psychic_wall",
     "redomesticate:blight_curse"
   ],
+  "effects": {
+    "redomesticate:pet_values": {
+      "max_animals": {
+        "type": "minecraft:linear",
+        "base": 3,
+        "per_level_above_first": 3
+      }
+    }
+  },
   "max_cost": {
     "base": 25,
     "per_level_above_first": 7

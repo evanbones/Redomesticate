@@ -4,6 +4,30 @@
     "translate": "enchantment.redomesticate.ore_scenting"
   },
   "exclusive_set": "redomesticate:herding",
+  "effects": {
+    "redomesticate:pet_values": {
+      "scan_interval_ticks": {
+        "type": "minecraft:linear",
+        "base": 550,
+        "per_level_above_first": -100
+      },
+      "range": {
+        "type": "minecraft:linear",
+        "base": 7,
+        "per_level_above_first": 2
+      },
+      "highlight_ticks": {
+        "type": "minecraft:linear",
+        "base": 50,
+        "per_level_above_first": 50
+      },
+      "max_ores": {
+        "type": "minecraft:linear",
+        "base": 3,
+        "per_level_above_first": 3
+      }
+    }
+  },
   "max_cost": {
     "base": 25,
     "per_level_above_first": 7

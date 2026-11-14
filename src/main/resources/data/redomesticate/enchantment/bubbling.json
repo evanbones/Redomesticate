@@ -9,6 +9,15 @@
     "redomesticate:shadow_hands",
     "redomesticate:warping_bite"
   ],
+  "effects": {
+    "redomesticate:pet_values": {
+      "bubble_ticks": {
+        "type": "minecraft:linear",
+        "base": 80,
+        "per_level_above_first": 40
+      }
+    }
+  },
   "max_cost": {
     "base": 25,
     "per_level_above_first": 7

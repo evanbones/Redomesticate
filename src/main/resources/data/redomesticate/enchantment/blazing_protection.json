@@ -10,6 +10,17 @@
     "redomesticate:frost_fang",
     "redomesticate:shadow_hands"
   ],
+  "effects": {
+    "redomesticate:pet_values": {
+      "max_charges": {
+        "type": "minecraft:linear",
+        "base": 2,
+        "per_level_above_first": 2
+      },
+      "recharge_ticks": 200,
+      "hit_cooldown_ticks": 600
+    }
+  },
   "max_cost": {
     "base": 25,
     "per_level_above_first": 7

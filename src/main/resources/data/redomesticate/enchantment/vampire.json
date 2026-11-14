@@ -9,6 +9,17 @@
     "redomesticate:gluttonous",
     "redomesticate:healing_aura"
   ],
+  "effects": {
+    "redomesticate:pet_values": {
+      "heal_multiplier": {
+        "type": "minecraft:linear",
+        "base": 0.5,
+        "per_level_above_first": 0.5
+      },
+      "min_heal": 1,
+      "max_heal": 10
+    }
+  },
   "max_cost": {
     "base": 25,
     "per_level_above_first": 7

@@ -159,7 +159,6 @@ public class VersionCompat {
         //?}
     }
 
-    // The accessor itself must be defined from the entity class (NeoForge checks the caller), so only the serializer lives here.
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static EntityDataSerializer<Object> syncedUUIDSerializer() {
         //? if >=26.1 {

@@ -1,5 +1,7 @@
 package com.evandev.redomesticate.event;
 
+import net.minecraft.world.item.enchantment.LevelBasedValue;
+import com.evandev.redomesticate.util.EnchantmentValues;
 import com.evandev.redomesticate.util.VersionCompat;
 import com.evandev.redomesticate.util.NbtCompat;
 import com.evandev.redomesticate.api.ICommandableMob;
@@ -164,7 +166,7 @@ public class InteractionHandler {
                 if (foodProperty != null && mob.getHealth() < mob.getMaxHealth()) {
                     if (isClient) return InteractionResult.SUCCESS;
 
-                    mob.heal((float) Math.floor(foodProperty.nutrition() * 1.5F));
+                    mob.heal((float) Math.floor(foodProperty.nutrition() * EnchantmentValues.get(mob, ModEnchantments.GLUTTONOUS, "food_heal_multiplier", LevelBasedValue.constant(1.5F))));
                     if (!player.isCreative()) itemInHand.shrink(1);
                     //? if >=26.1 {
                     /*mob.playSound(mob.getRandom().nextBoolean() ? SoundEvents.PLAYER_BURP : SoundEvents.GENERIC_EAT.value(), 1F, mob.getVoicePitch());

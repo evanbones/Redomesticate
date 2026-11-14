@@ -26,7 +26,6 @@ public class ClothConfigIntegration {
 
         ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 
-        // General Category
         general.addEntry(entryBuilder.startBooleanToggle(Component.translatable("redomesticate.configuration.trinaryCommandSystem"), config.trinaryCommandSystem)
                 .setDefaultValue(true)
                 .setTooltip(Component.translatable("redomesticate.configuration.trinaryCommandSystem.tooltip"))
@@ -96,7 +95,6 @@ public class ClothConfigIntegration {
                 .setTooltip(Component.translatable("redomesticate.configuration.petRoamingRadius.tooltip"))
                 .setSaveConsumer(val -> config.petRoamingRadius = val).build());
 
-        // Loot Category
         loot.addEntry(entryBuilder.startBooleanToggle(Component.translatable("redomesticate.configuration.petCurseEnchantmentsLootOnly"), config.petCurseEnchantmentsLootOnly)
                 .setDefaultValue(true)
                 .setTooltip(Component.translatable("redomesticate.configuration.petCurseEnchantmentsLootOnly.tooltip"))
@@ -137,7 +135,6 @@ public class ClothConfigIntegration {
                 .setTooltip(Component.translatable("redomesticate.configuration.ore_scenting_loot_chance.tooltip"))
                 .setSaveConsumer(val -> config.oreScentingLootChance = val).build());
 
-        // Enchantments Category
         addEnchantToggle(enchantments, entryBuilder, "enableAmphibious", config.enableAmphibious, val -> config.enableAmphibious = val);
         addEnchantToggle(enchantments, entryBuilder, "enableBlightCurse", config.enableBlightCurse, val -> config.enableBlightCurse = val);
         addEnchantToggle(enchantments, entryBuilder, "enableBubbling", config.enableBubbling, val -> config.enableBubbling = val);

@@ -13,10 +13,6 @@ import org.joml.Vector4f;
 
 import java.util.Random;
 
-/*
- * @since 1.9.0
- * Duplicate of ModelPart class which is not final
- */
 public class BasicModelPart {
     private final ObjectList<ModelBox> cubeList = new ObjectArrayList<>();
     private final ObjectList<BasicModelPart> childModels = new ObjectArrayList<>();

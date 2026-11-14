@@ -36,7 +36,7 @@ public interface ICommandableMob {
 
             if (ourselves instanceof TamableAnimal tamable) {
                 tamable.setOrderedToSit(nextCommand == PetCommand.SIT);
-                tamable.setInSittingPose(nextCommand == PetCommand.SIT);
+                tamable.setInSittingPose(nextCommand == PetCommand.SIT && !tamable.isInWaterOrBubble());
             }
 
             if (ourselves instanceof Fox fox) {

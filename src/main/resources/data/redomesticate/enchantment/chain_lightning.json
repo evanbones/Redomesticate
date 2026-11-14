@@ -9,6 +9,15 @@
     "redomesticate:magnetic",
     "redomesticate:shadow_hands"
   ],
+  "effects": {
+    "redomesticate:pet_values": {
+      "chains": {
+        "type": "minecraft:linear",
+        "base": 6,
+        "per_level_above_first": 3
+      }
+    }
+  },
   "max_cost": {
     "base": 25,
     "per_level_above_first": 7
