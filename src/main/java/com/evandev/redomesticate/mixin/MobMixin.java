@@ -60,6 +60,7 @@ public abstract class MobMixin extends LivingEntity implements ICommandableMob, 
     @Inject(method = "checkDespawn", at = @At("HEAD"), cancellable = true)
     private void redomesticate$preventDespawn(CallbackInfo ci) {
         if (this.redomesticate$isTame()) {
+            this.noActionTime = 0;
             ci.cancel();
         }
     }

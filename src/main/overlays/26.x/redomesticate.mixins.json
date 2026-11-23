@@ -11,6 +11,7 @@
     "AxolotlAttackablesSensorMixin",
     "AxolotlMixin",
     "CatMixin",
+    "EnchantmentHelperMixin",
     "EntityMixin",
     "EntityOutlineMixin",
     "FishingHookMixin",

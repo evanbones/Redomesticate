@@ -128,7 +128,7 @@ public class EventProxy {
     }
 
     public static boolean onTameHurt(LivingEntity livingEntity, DamageSource source) {
-        if (!TameableUtils.isTamed(livingEntity)) {
+        if (!ModConfig.get().swingThroughPets || !TameableUtils.isTamed(livingEntity)) {
             return false;
         }
 

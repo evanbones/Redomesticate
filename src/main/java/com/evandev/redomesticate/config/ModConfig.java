@@ -12,14 +12,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class ModConfig {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final File CONFIG_FILE = Services.PLATFORM.getConfigDirectory().resolve(Constants.MOD_ID + ".json").toFile();
     private static ModConfig INSTANCE;
-    private transient final Map<ResourceLocation, Boolean> enchantmentCache = new ConcurrentHashMap<>();
 
     public boolean trinaryCommandSystem = true;
     public boolean tameableHorse = true;
@@ -117,7 +114,7 @@ public class ModConfig {
     public boolean isEnchantmentEnabled(ResourceLocation location) {
         if (location == null) return true;
 
-        return enchantmentCache.computeIfAbsent(location, loc -> switch (location.getPath()) {
+        return switch (location.getPath()) {
             case "amphibious" -> enableAmphibious;
             case "blight_curse" -> enableBlightCurse;
             case "bubbling" -> enableBubbling;
@@ -154,6 +151,6 @@ public class ModConfig {
             case "void_cloud" -> enableVoidCloud;
             case "undead_curse" -> enableUndeadCurse;
             default -> true;
-        });
+        };
     }
 }

@@ -57,6 +57,10 @@
     {
       "id": "crittersandcompanions:ferret",
       "required": false
+    },
+    {
+      "id": "quark:foxhound",
+      "required": false
     }
   ]
 }

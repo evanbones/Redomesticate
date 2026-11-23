@@ -1,10 +1,8 @@
-### Added
-
-- Pet enchantment values (like Health Boost's extra health or Chain Lightning's chain count) can now be changed with datapacks through the `redomesticate:pet_values` effect in each enchantment's JSON file.
-- Jade now shows the owner of pets tamed through Redomesticate.
-
 ### Fixed
 
-- Fixed tamed Alex's Mobs pets ignoring Sit, Follow and Wander commands, and grizzly bears and elephants no longer being rideable.
-- Fixed parrots told to sit while in water flying away in their sitting pose.
-- Fixed Extra Health and other collar effects being lost on vanilla pets (like wolves and cats) after reloading the world.
+- Fixed pet enchantments disabled in the config still showing up in the enchanting table.
+- Fixed village pet shop chests being empty.
+- Fixed tamed pets (like rabbits) standing still instead of wandering when set to Wander.
+- Fixed Quark foxhounds following their owner when set to Wander.
+- Fixed enchantments turned on or off in the in-game config menu not taking effect until the game was restarted.
+- Fixed the Swing Through Pets option not doing anything when turned off.
